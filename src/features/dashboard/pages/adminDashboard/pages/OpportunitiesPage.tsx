@@ -254,18 +254,19 @@ export default function OpportunitiesPage() {
   ).length;
 
   const handleSourceToggle = (source: keyof typeof selectedSources) => {
-    setSelectedSources(prev => ({ ...prev, [source]: !prev[source] }));
+    setSelectedSources((prev) => ({ ...prev, [source]: !prev[source] }));
   };
 
   const getEstimatedJobs = () => {
     const activeSources = Object.values(selectedSources).filter(Boolean).length;
-    const periodMultiplier = {
-      '1d': 10,
-      '3d': 25,
-      '7d': 50,
-      '14d': 100,
-      '30d': 200,
-    }[selectedPeriod] || 50;
+    const periodMultiplier =
+      {
+        "1d": 10,
+        "3d": 25,
+        "7d": 50,
+        "14d": 100,
+        "30d": 200,
+      }[selectedPeriod] || 50;
     return activeSources * periodMultiplier;
   };
 
@@ -286,7 +287,9 @@ export default function OpportunitiesPage() {
     setTimeout(() => {
       setIsScraping(false);
       setScrapeDialogOpen(false);
-      toast.success(`Successfully scraped ${getEstimatedJobs()} jobs from ${activeSources.length} source(s)`);
+      toast.success(
+        `Successfully scraped ${getEstimatedJobs()} jobs from ${activeSources.length} source(s)`,
+      );
     }, 3000);
   };
 
@@ -304,7 +307,10 @@ export default function OpportunitiesPage() {
           <div className="flex gap-3">
             <Dialog open={scrapeDialogOpen} onOpenChange={setScrapeDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="border-black hover:bg-yellow-600 hover:text-white">
+                <Button
+                  variant="outline"
+                  className="border-black hover:bg-yellow-600 hover:text-white"
+                >
                   <Download className="mr-2 h-4 w-4" />
                   Scrape Jobs
                 </Button>
@@ -313,14 +319,18 @@ export default function OpportunitiesPage() {
                 <DialogHeader>
                   <DialogTitle>Scrape Jobs from Platforms</DialogTitle>
                   <DialogDescription>
-                    Select time period and sources to automatically fetch job listings
+                    Select time period and sources to automatically fetch job
+                    listings
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-6 py-4">
                   {/* Time Period Selection */}
                   <div className="space-y-3">
                     <Label className="text-sm font-semibold">Time Period</Label>
-                    <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                    <Select
+                      value={selectedPeriod}
+                      onValueChange={setSelectedPeriod}
+                    >
                       <SelectTrigger className="border-2 border-gray-300">
                         <SelectValue />
                       </SelectTrigger>
@@ -336,28 +346,53 @@ export default function OpportunitiesPage() {
 
                   {/* Source Selection */}
                   <div className="space-y-3">
-                    <Label className="text-sm font-semibold">Select Sources</Label>
+                    <Label className="text-sm font-semibold">
+                      Select Sources
+                    </Label>
                     <div className="space-y-3 border-2 border-gray-200 rounded-lg p-4">
                       {[
-                        { id: 'linkedin', label: 'LinkedIn', enabled: true },
-                        { id: 'internshala', label: 'Internshala', enabled: true },
-                        { id: 'naukri', label: 'Naukri.com', enabled: true },
-                        { id: 'indeed', label: 'Indeed (Coming Soon)', enabled: false },
-                        { id: 'glassdoor', label: 'Glassdoor (Coming Soon)', enabled: false },
+                        { id: "linkedin", label: "LinkedIn", enabled: true },
+                        {
+                          id: "internshala",
+                          label: "Internshala",
+                          enabled: true,
+                        },
+                        { id: "naukri", label: "Naukri.com", enabled: true },
+                        {
+                          id: "indeed",
+                          label: "Indeed (Coming Soon)",
+                          enabled: false,
+                        },
+                        {
+                          id: "glassdoor",
+                          label: "Glassdoor (Coming Soon)",
+                          enabled: false,
+                        },
                       ].map(({ id, label, enabled }) => (
                         <div key={id} className="flex items-center space-x-3">
                           <input
                             type="checkbox"
                             id={id}
-                            checked={selectedSources[id as keyof typeof selectedSources]}
-                            onChange={() => enabled && handleSourceToggle(id as keyof typeof selectedSources)}
+                            checked={
+                              selectedSources[
+                                id as keyof typeof selectedSources
+                              ]
+                            }
+                            onChange={() =>
+                              enabled &&
+                              handleSourceToggle(
+                                id as keyof typeof selectedSources,
+                              )
+                            }
                             disabled={!enabled}
                             className="h-4 w-4 rounded border-2 border-gray-300 text-yellow-600 focus:ring-yellow-600 disabled:opacity-50"
                           />
                           <label
                             htmlFor={id}
                             className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed ${
-                              enabled ? 'cursor-pointer' : 'text-gray-400 cursor-not-allowed'
+                              enabled
+                                ? "cursor-pointer"
+                                : "text-gray-400 cursor-not-allowed"
                             }`}
                           >
                             {label}
@@ -394,7 +429,10 @@ export default function OpportunitiesPage() {
                   </Button>
                   <Button
                     onClick={handleScrape}
-                    disabled={isScraping || Object.values(selectedSources).every(v => !v)}
+                    disabled={
+                      isScraping ||
+                      Object.values(selectedSources).every((v) => !v)
+                    }
                     className="bg-yellow-600 hover:bg-yellow-700 text-white"
                   >
                     {isScraping ? (
