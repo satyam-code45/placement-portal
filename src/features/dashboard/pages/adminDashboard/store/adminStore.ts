@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { authService } from "@/services/authService";
 
 interface AdminState {
   admin: {
@@ -24,12 +25,16 @@ export const useAdminStore = create<AdminState>()(
         role: "TnP Coordinator",
       },
       sidebarOpen: true,
-      toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+      toggleSidebar: () =>
+        set((state) => ({ sidebarOpen: !state.sidebarOpen })),
       setAdmin: (admin) => set({ admin }),
-      logout: () => set({ admin: null }),
+      logout: async () => {
+        await authService.logout();
+        set({ admin: null });
+      },
     }),
     {
       name: "admin-storage",
-    }
-  )
+    },
+  ),
 );

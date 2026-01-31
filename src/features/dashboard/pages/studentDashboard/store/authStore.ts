@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Student } from "../types";
+import { authService } from "@/services/authService";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -8,6 +9,7 @@ interface AuthState {
   setStudent: (student: Student | null) => void;
   updateStudent: (updates: Partial<Student>) => void;
   clearStudent: () => void;
+  logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -34,6 +36,16 @@ export const useAuthStore = create<AuthState>()(
         set((state) => ({
           student: state.student ? { ...state.student, ...updates } : null,
         }));
+      },
+
+      logout: async () => {
+        // Call backend logout API
+        await authService.logout();
+        // Clear local state
+        set({
+          isAuthenticated: false,
+          student: null,
+        });
       },
     }),
     {

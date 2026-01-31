@@ -137,9 +137,18 @@ class AuthService {
     localStorage.setItem("user", JSON.stringify(data.user));
   }
 
-  logout(): void {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  async logout(): Promise<void> {
+    try {
+      // Call backend logout API
+      await api.post("/auth/logout");
+    } catch (error) {
+      // Continue with logout even if API call fails
+      console.error("Logout API error:", error);
+    } finally {
+      // Clear local storage regardless of API result
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    }
   }
 
   getToken(): string | null {
