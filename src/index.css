@@ -118,3 +118,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Hide scrollbar utility class */
+@layer utilities {
+  .scrollbar-hide {
+    /* Firefox */
+    scrollbar-width: none;
+    /* Safari and Chrome */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

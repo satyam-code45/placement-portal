@@ -3,32 +3,47 @@ import {
   LayoutDashboard,
   User,
   Briefcase,
+  Brain,
   FileText,
   ClipboardList,
   Bookmark,
   ChevronLeft,
   ChevronRight,
   GraduationCap,
-  Brain,
   X,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useUIStore } from "../../store/uiStore";
 
 /* ---------------- NAV ITEMS ---------------- */
-
 
 const dashboardNav = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard/student" },
   { icon: User, label: "Profile", path: "/dashboard/student/profile" },
   { icon: FileText, label: "Resume", path: "/dashboard/student/resume" },
   { icon: Briefcase, label: "Jobs", path: "/dashboard/student/jobs" },
-  { icon: ClipboardList, label: "Applications", path: "/dashboard/student/applications" },
-  { icon: Bookmark, label: "Saved Jobs", path: "/dashboard/student/saved-jobs" },
-  { icon: Brain, label: "Mock Interview", path: "/dashboard/student/mock-interview" },
+  {
+    icon: Brain,
+    label: "Mock Interview",
+    path: "/dashboard/student/mock-interview",
+  },
+  {
+    icon: ClipboardList,
+    label: "Applications",
+    path: "/dashboard/student/applications",
+  },
+  {
+    icon: Bookmark,
+    label: "Saved Jobs",
+    path: "/dashboard/student/saved-jobs",
+  },
 ];
 
 export function AppSidebar() {
@@ -51,7 +66,7 @@ export function AppSidebar() {
           "fixed left-0 top-0 z-50 h-full w-[90%] max-w-sm lg:hidden",
           "bg-white rounded-r-3xl shadow-xl",
           "transition-transform duration-300",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          sidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         {/* Header */}
@@ -75,42 +90,42 @@ export function AppSidebar() {
             </Link>
           ))}
         </nav>
-
-
       </aside>
 
-      {/* ================= DESKTOP SIDEBAR (UNCHANGED) ================= */}
-
-      <aside
-        className={cn(
-          "fixed left-0 top-0 z-30 hidden h-full bg-white text-sidebar-foreground transition-all duration-300 lg:flex flex-col",
-          sidebarOpen ? "w-64" : "w-16"
-        )}
-      >
-        {/* Logo */}
-        <div className="flex h-16 items-center justify-between border-b px-4">
-          <Link to="/dashboard/student" className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sidebar-primary">
-              <GraduationCap className="h-5 w-5 text-sidebar-primary-foreground" />
+      {/* ================= DESKTOP SIDEBAR ================= */}
+      <div className="hidden lg:flex flex-col h-full">
+        {/* Logo Area */}
+        <div className="flex h-16 items-center justify-between px-4">
+          <Link
+            to="/dashboard/student"
+            className="flex items-center gap-3 overflow-hidden min-w-0"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform hover:scale-105">
+              <GraduationCap className="h-5 w-5" />
             </div>
             {sidebarOpen && (
-              <span className="text-lg font-semibold tracking-tight">
+              <span className="text-lg font-bold tracking-tight text-foreground/80 truncate">
                 CampusConnect
               </span>
             )}
           </Link>
 
-          <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+            className="text-muted-foreground hover:text-foreground hover:bg-transparent"
+          >
             {sidebarOpen ? (
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-5 w-5" />
             ) : (
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-5 w-5" />
             )}
           </Button>
         </div>
 
-        {/* Dashboard Nav */}
-        <nav className="flex-1 space-y-1 p-3">
+        {/* Navigation */}
+        <nav className="flex-1 space-y-2 p-4 overflow-y-auto scrollbar-hide">
           {dashboardNav.map((item) => {
             const isActive = location.pathname === item.path;
 
@@ -119,20 +134,22 @@ export function AppSidebar() {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium",
+                  "flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200",
                   isActive
-                    ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                    : "hover:bg-sidebar-accent"
+                    ? "bg-primary/10 text-primary shadow-sm"
+                    : "text-muted-foreground hover:bg-zinc-50 hover:text-foreground",
+                  !sidebarOpen && "justify-center px-0",
                 )}
               >
                 <item.icon
                   className={cn(
-                    "flex-shrink-0 transition-all duration-200",
-                    sidebarOpen ? "h-5 w-5" : "h-5 w-5"
+                    "shrink-0",
+                    isActive ? "text-primary" : "text-black",
+                    "h-5 w-5",
                   )}
                 />
 
-                {sidebarOpen && <span>{item.label}</span>}
+                {sidebarOpen && <span className="truncate">{item.label}</span>}
               </Link>
             );
 
@@ -141,7 +158,7 @@ export function AppSidebar() {
             ) : (
               <Tooltip key={item.path}>
                 <TooltipTrigger asChild>{NavItem}</TooltipTrigger>
-                <TooltipContent side="right">
+                <TooltipContent side="right" className="font-medium">
                   {item.label}
                 </TooltipContent>
               </Tooltip>
@@ -149,14 +166,15 @@ export function AppSidebar() {
           })}
         </nav>
 
-        <div className="border-t p-4">
-          {sidebarOpen && (
-            <p className="text-xs text-sidebar-foreground/60">
-              © 2024 PlaceHub
+        {/* Footer */}
+        {sidebarOpen && (
+          <div className="p-4 mt-auto border-t border-dashed border-slate-200">
+            <p className="text-xs text-center text-muted-foreground/60">
+              © 2026 PlaceHub
             </p>
-          )}
-        </div>
-      </aside>
+          </div>
+        )}
+      </div>
     </>
   );
 }
