@@ -52,17 +52,17 @@ function OpportunityCard({
   onReject: (id: string) => void;
 }) {
   const statusConfig = {
-    pending: { color: "bg-amber-100 text-amber-700", icon: Clock },
-    approved: { color: "bg-emerald-100 text-emerald-700", icon: CheckCircle2 },
-    rejected: { color: "bg-red-100 text-red-700", icon: XCircle },
+    pending: { color: "bg-gray-100 text-gray-700", icon: Clock },
+    approved: { color: "bg-gray-100 text-gray-700", icon: CheckCircle2 },
+    rejected: { color: "bg-yellow-100 text-red-700", icon: XCircle },
     closed: { color: "bg-gray-100 text-gray-700", icon: XCircle },
   };
 
   const sourceConfig: Record<string, string> = {
-    linkedin: "bg-blue-100 text-blue-700",
-    internshala: "bg-cyan-100 text-cyan-700",
-    naukri: "bg-purple-100 text-purple-700",
-    manual: "bg-slate-100 text-slate-700",
+    linkedin: "bg-gray-100 text-gray-700",
+    internshala: "bg-gray-100 text-gray-700",
+    naukri: "bg-gray-100 text-gray-700",
+    manual: "bg-gray-100 text-gray-700",
     other: "bg-gray-100 text-gray-700",
   };
 
@@ -166,7 +166,7 @@ function OpportunityCard({
                 <>
                   <DropdownMenuItem
                     onClick={() => onApprove(opportunity.id)}
-                    className="text-emerald-600"
+                    className="text-gray-600"
                   >
                     <CheckCircle2 className="mr-2 h-4 w-4" />
                     Approve
@@ -239,7 +239,7 @@ export default function OpportunitiesPage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl font-bold">Opportunities Management</h1>
-            <p className="text-muted-foreground">
+            <p className="text-gray-600">
               Manage job postings and internship opportunities
             </p>
           </div>
@@ -255,31 +255,27 @@ export default function OpportunitiesPage() {
         <div className="grid gap-4 sm:grid-cols-4">
           <Card>
             <CardContent className="p-4">
-              <p className="text-sm text-muted-foreground">Total</p>
+              <p className="text-sm text-gray-600">Total</p>
               <p className="text-2xl font-bold">{opportunities.length}</p>
             </CardContent>
           </Card>
-          <Card className="border-amber-200 bg-amber-50/50">
+          <Card className="border-red-200 bg-yellow-50/50">
             <CardContent className="p-4">
-              <p className="text-sm text-amber-700">Pending Review</p>
-              <p className="text-2xl font-bold text-amber-700">
-                {pendingCount}
-              </p>
+              <p className="text-sm text-red-700">Pending Review</p>
+              <p className="text-2xl font-bold text-red-700">{pendingCount}</p>
             </CardContent>
           </Card>
-          <Card className="border-emerald-200 bg-emerald-50/50">
+          <Card className="border-gray-200 bg-gray-50/50">
             <CardContent className="p-4">
-              <p className="text-sm text-emerald-700">Approved</p>
-              <p className="text-2xl font-bold text-emerald-700">
+              <p className="text-sm text-gray-700">Approved</p>
+              <p className="text-2xl font-bold text-gray-700">
                 {approvedCount}
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <p className="text-sm text-muted-foreground">
-                Active Internships
-              </p>
+              <p className="text-sm text-gray-600">Active Internships</p>
               <p className="text-2xl font-bold">
                 {
                   opportunities.filter(
@@ -294,7 +290,7 @@ export default function OpportunitiesPage() {
         {/* Filters */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center">
           <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
             <Input
               placeholder="Search by role or company..."
               className="pl-9"
@@ -340,7 +336,7 @@ export default function OpportunitiesPage() {
           <TabsContent value="all" className="space-y-4">
             {filteredOpportunities.length === 0 ? (
               <Card>
-                <CardContent className="p-12 text-center text-muted-foreground">
+                <CardContent className="p-12 text-center text-gray-600">
                   No opportunities found matching your criteria.
                 </CardContent>
               </Card>

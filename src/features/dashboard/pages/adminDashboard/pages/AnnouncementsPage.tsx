@@ -54,13 +54,13 @@ function AnnouncementCard({ announcement }: { announcement: Announcement }) {
     drive: { icon: Calendar, color: "bg-purple-100 text-purple-700" },
     result: { icon: Trophy, color: "bg-amber-100 text-amber-700" },
     training: { icon: GraduationCap, color: "bg-emerald-100 text-emerald-700" },
-    notice: { icon: Bell, color: "bg-red-100 text-red-700" },
+    notice: { icon: Bell, color: "bg-yellow-100 text-red-700" },
   };
 
   const statusConfig = {
     draft: { color: "bg-gray-100 text-gray-700", icon: Clock },
     published: { color: "bg-emerald-100 text-emerald-700", icon: CheckCircle2 },
-    expired: { color: "bg-red-100 text-red-700", icon: Clock },
+    expired: { color: "bg-yellow-100 text-red-700", icon: Clock },
   };
 
   const TypeIcon = typeConfig[announcement.type].icon;

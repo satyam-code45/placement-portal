@@ -43,10 +43,10 @@ export function AdminHeader() {
           <span className="sr-only">Toggle sidebar</span>
         </Button>
         <div className="hidden md:block">
-          <h2 className="text-lg font-semibold text-foreground">
+          <h2 className="text-lg font-semibold text-gray-900">
             TnP Admin Portal
           </h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-gray-600">
             Training & Placement Management System
           </p>
         </div>
@@ -55,14 +55,14 @@ export function AdminHeader() {
       <div className="flex items-center gap-3">
         {/* Search */}
         <div className="hidden lg:flex relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search..." className="pl-9 w-64 bg-muted/50" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Input placeholder="Search..." className="pl-9 w-64 bg-gray-100" />
         </div>
 
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5" />
-          <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs">
+          <Badge className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-yellow-600 text-white border-0">
             3
           </Badge>
           <span className="sr-only">Notifications</span>
@@ -73,15 +73,15 @@ export function AdminHeader() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="gap-2 pl-2 pr-3">
               <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-primary text-primary-foreground text-sm font-medium">
+                <AvatarFallback className="bg-yellow-600 text-white text-sm font-medium">
                   {initials}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden md:block text-left">
-                <span className="text-sm font-medium block">
+                <span className="text-sm font-medium block text-gray-900">
                   {admin?.name || "Admin"}
                 </span>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-gray-600">
                   {admin?.role || "TnP Coordinator"}
                 </span>
               </div>

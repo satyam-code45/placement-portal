@@ -13,12 +13,12 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   const sidebarOpen = useAdminStore((state) => state.sidebarOpen);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 p-3 lg:p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 p-3 lg:p-4">
       <div className="h-[calc(100vh-1.5rem)] lg:h-[calc(100vh-2rem)] flex gap-3 lg:gap-4">
         {/* Container 1: Sidebar (rounded) */}
         <aside
           className={cn(
-            "bg-white rounded-2xl shadow-lg border transition-all duration-300 flex-shrink-0",
+            "bg-gray-900 rounded-2xl shadow-lg border border-gray-800 transition-all duration-300 flex-shrink-0",
             sidebarOpen ? "w-[16rem]" : "w-[4.5rem]",
           )}
         >

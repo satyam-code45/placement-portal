@@ -58,21 +58,21 @@ const roles = [
     id: "super_admin",
     name: "Super Admin",
     description: "Full system access",
-    color: "bg-red-100 text-red-700",
+    color: "bg-yellow-100 text-red-700",
     permissions: ["all"],
   },
   {
     id: "admin",
     name: "Admin",
     description: "Manage placements & students",
-    color: "bg-blue-100 text-blue-700",
+    color: "bg-gray-100 text-gray-700",
     permissions: ["opportunities", "students", "companies", "reports"],
   },
   {
     id: "coordinator",
     name: "Coordinator",
     description: "Department-level access",
-    color: "bg-purple-100 text-purple-700",
+    color: "bg-gray-100 text-gray-700",
     permissions: ["students", "announcements"],
   },
   {
@@ -99,16 +99,19 @@ function UserCard({
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-3">
-              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="text-lg font-bold text-primary">
-                  {user.name.split(" ").map((n) => n[0]).join("")}
+              <div className="h-12 w-12 rounded-full bg-yellow-600/10 flex items-center justify-center">
+                <span className="text-lg font-bold text-red-600">
+                  {user.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
                 </span>
               </div>
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="font-semibold">{user.name}</h3>
                   {user.status === "active" ? (
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                    <CheckCircle2 className="h-4 w-4 text-gray-700" />
                   ) : (
                     <XCircle className="h-4 w-4 text-gray-400" />
                   )}
@@ -132,7 +135,8 @@ function UserCard({
 
             {user.department && (
               <p className="text-sm text-muted-foreground">
-                Department: <span className="font-medium">{user.department}</span>
+                Department:{" "}
+                <span className="font-medium">{user.department}</span>
               </p>
             )}
 
@@ -205,10 +209,13 @@ export default function UsersPage() {
         user.id === id
           ? {
               ...user,
-              status: user.status === "active" ? ("inactive" as const) : ("active" as const),
+              status:
+                user.status === "active"
+                  ? ("inactive" as const)
+                  : ("active" as const),
             }
-          : user
-      )
+          : user,
+      ),
     );
     toast.success("User status updated!");
   };
@@ -234,7 +241,9 @@ export default function UsersPage() {
             <DialogContent className="max-w-lg">
               <DialogHeader>
                 <DialogTitle>Add New User</DialogTitle>
-                <DialogDescription>Create a new admin account</DialogDescription>
+                <DialogDescription>
+                  Create a new admin account
+                </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -267,7 +276,9 @@ export default function UsersPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Department (Optional)</label>
+                  <label className="text-sm font-medium">
+                    Department (Optional)
+                  </label>
                   <Select>
                     <SelectTrigger>
                       <SelectValue placeholder="Select department" />
@@ -284,7 +295,9 @@ export default function UsersPage() {
               </div>
               <DialogFooter>
                 <Button variant="outline">Cancel</Button>
-                <Button onClick={() => toast.success("User created successfully!")}>
+                <Button
+                  onClick={() => toast.success("User created successfully!")}
+                >
                   Create User
                 </Button>
               </DialogFooter>
@@ -303,29 +316,33 @@ export default function UsersPage() {
             <div className="grid gap-4 sm:grid-cols-4">
               <Card>
                 <CardContent className="p-4">
-                  <p className="text-sm text-muted-foreground">Total Users</p>
+                  <p className="text-sm text-gray-600">Total Users</p>
                   <p className="text-2xl font-bold">{users.length}</p>
                 </CardContent>
               </Card>
-              <Card className="border-emerald-200 bg-emerald-50/50">
+              <Card className="border-gray-200 bg-gray-50/50">
                 <CardContent className="p-4">
-                  <p className="text-sm text-emerald-700">Active</p>
-                  <p className="text-2xl font-bold text-emerald-700">
+                  <p className="text-sm text-gray-700">Active</p>
+                  <p className="text-2xl font-bold text-gray-700">
                     {users.filter((u) => u.status === "active").length}
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardContent className="p-4">
-                  <p className="text-sm text-muted-foreground">Admins</p>
+                  <p className="text-sm text-gray-600">Admins</p>
                   <p className="text-2xl font-bold">
-                    {users.filter((u) => u.role === "admin" || u.role === "super_admin").length}
+                    {
+                      users.filter(
+                        (u) => u.role === "admin" || u.role === "super_admin",
+                      ).length
+                    }
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardContent className="p-4">
-                  <p className="text-sm text-muted-foreground">Coordinators</p>
+                  <p className="text-sm text-gray-600">Coordinators</p>
                   <p className="text-2xl font-bold">
                     {users.filter((u) => u.role === "coordinator").length}
                   </p>
@@ -369,7 +386,11 @@ export default function UsersPage() {
                 </Card>
               ) : (
                 filteredUsers.map((user) => (
-                  <UserCard key={user.id} user={user} onToggleStatus={handleToggleStatus} />
+                  <UserCard
+                    key={user.id}
+                    user={user}
+                    onToggleStatus={handleToggleStatus}
+                  />
                 ))
               )}
             </div>
@@ -399,13 +420,18 @@ export default function UsersPage() {
                     <p className="text-sm font-medium mb-2">Permissions:</p>
                     <div className="flex flex-wrap gap-2">
                       {role.permissions.map((perm) => (
-                        <Badge key={perm} variant="secondary" className="capitalize">
+                        <Badge
+                          key={perm}
+                          variant="secondary"
+                          className="capitalize"
+                        >
                           {perm.replace("_", " ")}
                         </Badge>
                       ))}
                     </div>
                     <div className="mt-4 text-sm text-muted-foreground">
-                      {users.filter((u) => u.role === role.id).length} users assigned
+                      {users.filter((u) => u.role === role.id).length} users
+                      assigned
                     </div>
                   </CardContent>
                 </Card>

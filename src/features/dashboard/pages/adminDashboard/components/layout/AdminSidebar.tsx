@@ -98,15 +98,20 @@ export function AdminSidebar() {
       <aside
         className={cn(
           "fixed left-0 top-0 z-50 h-full w-[90%] max-w-sm lg:hidden",
-          "bg-white rounded-r-3xl shadow-xl",
+          "bg-gray-900 rounded-r-3xl shadow-xl",
           "transition-transform duration-300",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5">
-          <span className="text-xl font-extrabold">TnP Admin</span>
-          <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+          <span className="text-xl font-extrabold text-white">TnP Admin</span>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+            className="text-white hover:bg-gray-800"
+          >
             <X className="h-5 w-5" />
           </Button>
         </div>
@@ -121,8 +126,8 @@ export function AdminSidebar() {
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors",
                 location.pathname === item.path
-                  ? "bg-primary/10 text-primary"
-                  : "text-zinc-600 hover:bg-zinc-50",
+                  ? "bg-yellow-600 text-white"
+                  : "text-gray-300 hover:bg-gray-800",
               )}
             >
               <item.icon className="h-5 w-5" />
@@ -140,11 +145,11 @@ export function AdminSidebar() {
             to="/dashboard/admin"
             className="flex items-center gap-3 overflow-hidden min-w-0"
           >
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform hover:scale-105">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-yellow-600 text-white shadow-sm transition-transform hover:scale-105">
               <Shield className="h-5 w-5" />
             </div>
             {sidebarOpen && (
-              <span className="text-lg font-bold tracking-tight text-foreground/80 truncate">
+              <span className="text-lg font-bold tracking-tight text-white truncate">
                 TnP Admin
               </span>
             )}
@@ -154,7 +159,7 @@ export function AdminSidebar() {
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
-            className="text-muted-foreground hover:text-foreground hover:bg-transparent"
+            className="text-gray-300 hover:text-white hover:bg-transparent"
           >
             {sidebarOpen ? (
               <ChevronLeft className="h-5 w-5" />
@@ -176,15 +181,15 @@ export function AdminSidebar() {
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200",
                   isActive
-                    ? "bg-primary/10 text-primary shadow-sm"
-                    : "text-muted-foreground hover:bg-zinc-50 hover:text-foreground",
+                    ? "bg-yellow-600 text-white shadow-sm"
+                    : "text-gray-300 hover:bg-gray-800 hover:text-white",
                   !sidebarOpen && "justify-center px-0",
                 )}
               >
                 <item.icon
                   className={cn(
                     "shrink-0",
-                    isActive ? "text-primary" : "text-black",
+                    isActive ? "text-white" : "text-gray-300",
                     "h-5 w-5",
                   )}
                 />
@@ -208,8 +213,8 @@ export function AdminSidebar() {
 
         {/* Footer */}
         {sidebarOpen && (
-          <div className="p-4 mt-auto border-t border-dashed border-slate-200">
-            <p className="text-xs text-center text-muted-foreground/60">
+          <div className="p-4 mt-auto border-t border-dashed border-gray-700">
+            <p className="text-xs text-center text-gray-400">
               © 2026 TnP Portal
             </p>
           </div>

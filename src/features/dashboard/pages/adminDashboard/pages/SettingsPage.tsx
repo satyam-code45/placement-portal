@@ -398,7 +398,7 @@ export default function SettingsPage() {
                 <CardDescription>Proceed with caution</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-4 rounded-lg bg-red-50">
+                <div className="flex items-center justify-between p-4 rounded-lg bg-yellow-50">
                   <div>
                     <p className="font-medium">Maintenance Mode</p>
                     <p className="text-sm text-muted-foreground">

@@ -75,7 +75,7 @@ const reportTypes = [
     title: "NAAC/NBA Report",
     description: "Accreditation-ready formatted report",
     icon: FileBarChart,
-    color: "bg-red-100 text-red-700",
+    color: "bg-yellow-100 text-red-700",
     formats: ["PDF"],
   },
 ];

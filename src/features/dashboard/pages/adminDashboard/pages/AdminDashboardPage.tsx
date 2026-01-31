@@ -42,11 +42,11 @@ function StatCard({
   variant?: "default" | "success" | "warning" | "info" | "destructive";
 }) {
   const variantStyles = {
-    default: "bg-primary/10 text-primary",
-    success: "bg-emerald-500/10 text-emerald-600",
-    warning: "bg-amber-500/10 text-amber-600",
-    info: "bg-blue-500/10 text-blue-600",
-    destructive: "bg-red-500/10 text-red-600",
+    default: "bg-gray-100 text-gray-900",
+    success: "bg-gray-100 text-gray-900",
+    warning: "bg-yellow-50 text-red-600",
+    info: "bg-gray-100 text-gray-900",
+    destructive: "bg-yellow-100 text-red-600",
   };
 
   return (
@@ -61,7 +61,7 @@ function StatCard({
             )}
             {trend && (
               <div
-                className={`flex items-center gap-1 text-xs ${trend.positive ? "text-emerald-600" : "text-red-600"}`}
+                className={`flex items-center gap-1 text-xs ${trend.positive ? "text-gray-900" : "text-red-600"}`}
               >
                 <TrendingUp
                   className={`h-3 w-3 ${!trend.positive && "rotate-180"}`}
@@ -87,7 +87,7 @@ export default function AdminDashboardPage() {
     <AdminLayout>
       <div className="space-y-6 animate-fade-in">
         {/* Welcome Header */}
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between bg-gradient-to-r from-primary/5 via-primary/10 to-transparent p-6 rounded-xl border border-primary/10">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between bg-gradient-to-r from-gray-50 via-gray-100 to-white p-6 rounded-xl border-2 border-gray-900">
           <div>
             <h1 className="text-2xl font-bold md:text-3xl text-gray-900">
               Welcome back, {admin?.name?.split(" ")[0] || "Admin"}!
@@ -97,13 +97,17 @@ export default function AdminDashboardPage() {
             </p>
           </div>
           <div className="flex gap-3">
-            <Button asChild variant="outline">
+            <Button
+              asChild
+              variant="outline"
+              className="border-2 border-gray-900"
+            >
               <Link to="/dashboard/admin/opportunities/add">
                 <Briefcase className="mr-2 h-4 w-4" />
                 Add Opportunity
               </Link>
             </Button>
-            <Button asChild>
+            <Button asChild className="bg-yellow-600 hover:bg-yellow-700">
               <Link to="/dashboard/admin/announcements">
                 <Bell className="mr-2 h-4 w-4" />
                 New Announcement
@@ -190,7 +194,7 @@ export default function AdminDashboardPage() {
                 <CardTitle className="text-lg">
                   Alerts & Notifications
                 </CardTitle>
-                <AlertTriangle className="h-5 w-5 text-amber-500" />
+                <AlertTriangle className="h-5 w-5 text-red-600" />
               </div>
               <CardDescription>Requires attention</CardDescription>
             </CardHeader>
@@ -200,19 +204,19 @@ export default function AdminDashboardPage() {
                   key={index}
                   className={`flex items-start gap-3 p-3 rounded-lg ${
                     alert.type === "warning"
-                      ? "bg-amber-50 border border-amber-200"
+                      ? "bg-yellow-50 border border-red-200"
                       : alert.type === "success"
-                        ? "bg-emerald-50 border border-emerald-200"
-                        : "bg-blue-50 border border-blue-200"
+                        ? "bg-gray-50 border border-gray-200"
+                        : "bg-gray-50 border border-gray-200"
                   }`}
                 >
                   <div
                     className={`mt-0.5 ${
                       alert.type === "warning"
-                        ? "text-amber-600"
+                        ? "text-red-600"
                         : alert.type === "success"
-                          ? "text-emerald-600"
-                          : "text-blue-600"
+                          ? "text-gray-900"
+                          : "text-gray-900"
                     }`}
                   >
                     {alert.type === "warning" ? (
@@ -272,7 +276,7 @@ export default function AdminDashboardPage() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">Placement Progress</CardTitle>
-                <TrendingUp className="h-5 w-5 text-emerald-500" />
+                <TrendingUp className="h-5 w-5 text-gray-900" />
               </div>
               <CardDescription>Monthly placement trend</CardDescription>
             </CardHeader>
@@ -284,7 +288,7 @@ export default function AdminDashboardPage() {
                     className="flex flex-col items-center gap-2 flex-1"
                   >
                     <div
-                      className="w-full bg-primary/80 rounded-t-md transition-all hover:bg-primary"
+                      className="w-full bg-yellow-600 rounded-t-md transition-all hover:bg-yellow-700"
                       style={{
                         height: `${(item.placements / 150) * 100}%`,
                         minHeight: "20px",
@@ -319,7 +323,7 @@ export default function AdminDashboardPage() {
                 <div key={index} className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center gap-2">
-                      <span className="w-5 h-5 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-medium">
+                      <span className="w-5 h-5 rounded-full bg-gray-900 text-white text-xs flex items-center justify-center font-medium">
                         {index + 1}
                       </span>
                       <span className="font-medium">{skill.skill}</span>

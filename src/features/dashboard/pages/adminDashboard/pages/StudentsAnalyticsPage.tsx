@@ -109,22 +109,22 @@ export default function StudentsAnalyticsPage() {
                     {studentAnalytics.totalRegistered}
                   </p>
                 </div>
-                <div className="p-3 rounded-xl bg-blue-100">
-                  <Users className="h-6 w-6 text-blue-600" />
+                <div className="p-3 rounded-xl bg-gray-100">
+                  <Users className="h-6 w-6 text-gray-600" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-emerald-200 bg-emerald-50/30">
+          <Card className="border-gray-200 bg-gray-50/30">
             <CardContent className="p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-emerald-700">Eligible</p>
-                  <p className="text-3xl font-bold text-emerald-700">
+                  <p className="text-sm text-gray-700">Eligible</p>
+                  <p className="text-3xl font-bold text-gray-700">
                     {studentAnalytics.eligible}
                   </p>
-                  <p className="text-xs text-emerald-600">
+                  <p className="text-xs text-gray-600">
                     {(
                       (studentAnalytics.eligible /
                         studentAnalytics.totalRegistered) *
@@ -133,27 +133,27 @@ export default function StudentsAnalyticsPage() {
                     % of total
                   </p>
                 </div>
-                <div className="p-3 rounded-xl bg-emerald-100">
-                  <CheckCircle2 className="h-6 w-6 text-emerald-600" />
+                <div className="p-3 rounded-xl bg-gray-100">
+                  <CheckCircle2 className="h-6 w-6 text-gray-600" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-amber-200 bg-amber-50/30">
+          <Card className="border-red-200 bg-yellow-50/30">
             <CardContent className="p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-amber-700">Placed</p>
-                  <p className="text-3xl font-bold text-amber-700">
+                  <p className="text-sm text-red-700">Placed</p>
+                  <p className="text-3xl font-bold text-red-700">
                     {studentAnalytics.placed}
                   </p>
-                  <p className="text-xs text-amber-600">
+                  <p className="text-xs text-red-600">
                     {placementRate}% placement rate
                   </p>
                 </div>
-                <div className="p-3 rounded-xl bg-amber-100">
-                  <GraduationCap className="h-6 w-6 text-amber-600" />
+                <div className="p-3 rounded-xl bg-yellow-100">
+                  <GraduationCap className="h-6 w-6 text-red-600" />
                 </div>
               </div>
             </CardContent>
@@ -207,7 +207,7 @@ export default function StudentsAnalyticsPage() {
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-emerald-600">
+                        <span className="font-medium text-red-600">
                           {data.placed} placed
                         </span>
                         <span className="text-muted-foreground">
@@ -217,13 +217,13 @@ export default function StudentsAnalyticsPage() {
                     </div>
                     <div className="flex gap-1 h-3">
                       <div
-                        className="bg-emerald-500 rounded-l"
+                        className="bg-yellow-600 rounded-l"
                         style={{
                           width: `${(data.placed / data.total) * 100}%`,
                         }}
                       />
                       <div
-                        className="bg-blue-500"
+                        className="bg-gray-400"
                         style={{
                           width: `${((data.eligible - data.placed) / data.total) * 100}%`,
                         }}
@@ -240,11 +240,11 @@ export default function StudentsAnalyticsPage() {
               )}
               <div className="flex items-center gap-4 pt-4 text-xs">
                 <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 rounded bg-emerald-500" />
+                  <div className="w-3 h-3 rounded bg-yellow-600" />
                   <span>Placed</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 rounded bg-blue-500" />
+                  <div className="w-3 h-3 rounded bg-gray-400" />
                   <span>Eligible (Unplaced)</span>
                 </div>
                 <div className="flex items-center gap-1">
@@ -318,7 +318,7 @@ export default function StudentsAnalyticsPage() {
                         ? "[&>div]:bg-emerald-500"
                         : item.readiness >= 50
                           ? "[&>div]:bg-amber-500"
-                          : "[&>div]:bg-red-500"
+                          : "[&>div]:bg-yellow-500"
                     }`}
                   />
                 </div>

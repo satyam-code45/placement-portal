@@ -51,15 +51,15 @@ import { toast } from "sonner";
 
 function OutreachCard({ outreach }: { outreach: RecruiterOutreach }) {
   const statusConfig = {
-    responded: { color: "bg-emerald-100 text-emerald-700", icon: CheckCircle2 },
-    pending: { color: "bg-amber-100 text-amber-700", icon: Clock },
-    "follow-up": { color: "bg-blue-100 text-blue-700", icon: AlertCircle },
+    responded: { color: "bg-gray-100 text-gray-700", icon: CheckCircle2 },
+    pending: { color: "bg-gray-100 text-gray-700", icon: Clock },
+    "follow-up": { color: "bg-yellow-100 text-red-700", icon: AlertCircle },
   };
 
   const modeConfig = {
-    email: { icon: Mail, color: "text-blue-600" },
-    call: { icon: Phone, color: "text-emerald-600" },
-    meeting: { icon: Video, color: "text-purple-600" },
+    email: { icon: Mail, color: "text-gray-600" },
+    call: { icon: Phone, color: "text-gray-600" },
+    meeting: { icon: Video, color: "text-gray-600" },
   };
 
   const StatusIcon = statusConfig[outreach.status].icon;
@@ -71,7 +71,7 @@ function OutreachCard({ outreach }: { outreach: RecruiterOutreach }) {
 
   return (
     <Card
-      className={`hover:shadow-md transition-shadow ${isOverdue ? "border-amber-300" : ""}`}
+      className={`hover:shadow-md transition-shadow ${isOverdue ? "border-red-300" : ""}`}
     >
       <CardContent className="p-5">
         <div className="flex items-start justify-between gap-4">
@@ -114,7 +114,7 @@ function OutreachCard({ outreach }: { outreach: RecruiterOutreach }) {
                 </span>
               </div>
               <div
-                className={`flex items-center gap-1 ${isOverdue ? "text-amber-600 font-medium" : ""}`}
+                className={`flex items-center gap-1 ${isOverdue ? "text-red-600 font-medium" : ""}`}
               >
                 <Bell className="h-4 w-4" />
                 <span>
@@ -270,31 +270,29 @@ export default function OutreachPage() {
         <div className="grid gap-4 sm:grid-cols-4">
           <Card>
             <CardContent className="p-4">
-              <p className="text-sm text-muted-foreground">
-                Total Interactions
-              </p>
+              <p className="text-sm text-gray-600">Total Interactions</p>
               <p className="text-2xl font-bold">{mockOutreach.length}</p>
             </CardContent>
           </Card>
-          <Card className="border-emerald-200 bg-emerald-50/50">
+          <Card className="border-gray-200 bg-gray-50/50">
             <CardContent className="p-4">
-              <p className="text-sm text-emerald-700">Responded</p>
-              <p className="text-2xl font-bold text-emerald-700">
+              <p className="text-sm text-gray-700">Responded</p>
+              <p className="text-2xl font-bold text-gray-700">
                 {mockOutreach.filter((o) => o.status === "responded").length}
               </p>
             </CardContent>
           </Card>
-          <Card className="border-amber-200 bg-amber-50/50">
+          <Card className="border-gray-200 bg-gray-50/50">
             <CardContent className="p-4">
-              <p className="text-sm text-amber-700">Pending</p>
-              <p className="text-2xl font-bold text-amber-700">
+              <p className="text-sm text-gray-700">Pending</p>
+              <p className="text-2xl font-bold text-gray-700">
                 {mockOutreach.filter((o) => o.status === "pending").length}
               </p>
             </CardContent>
           </Card>
           <Card
             className={
-              pendingFollowUps > 0 ? "border-red-200 bg-red-50/50" : ""
+              pendingFollowUps > 0 ? "border-red-200 bg-yellow-50/50" : ""
             }
           >
             <CardContent className="p-4">
@@ -313,21 +311,21 @@ export default function OutreachPage() {
         </div>
 
         {/* AI Feature Hint */}
-        <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+        <Card className="bg-gray-50 border-gray-200">
           <CardContent className="p-4 flex items-center gap-4">
-            <div className="p-2 rounded-lg bg-purple-100">
-              <Sparkles className="h-5 w-5 text-purple-600" />
+            <div className="p-2 rounded-lg bg-gray-200">
+              <Sparkles className="h-5 w-5 text-gray-700" />
             </div>
             <div className="flex-1">
-              <p className="font-medium text-purple-900">AI-Powered Features</p>
-              <p className="text-sm text-purple-700">
+              <p className="font-medium text-gray-900">AI-Powered Features</p>
+              <p className="text-sm text-gray-700">
                 Get auto-generated conversation summaries and smart follow-up
                 reminders
               </p>
             </div>
             <Button
               variant="outline"
-              className="border-purple-300 text-purple-700 hover:bg-purple-100"
+              className="border-gray-300 text-gray-700 hover:bg-gray-100"
             >
               Enable AI
             </Button>

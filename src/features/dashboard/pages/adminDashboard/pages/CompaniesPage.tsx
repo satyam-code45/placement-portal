@@ -55,8 +55,8 @@ function CompanyCard({ company }: { company: Company }) {
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-3">
-              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Building2 className="h-6 w-6 text-primary" />
+              <div className="h-12 w-12 rounded-xl bg-yellow-600/10 flex items-center justify-center">
+                <Building2 className="h-6 w-6 text-red-600" />
               </div>
               <div>
                 <h3 className="font-semibold text-lg">{company.name}</h3>
@@ -85,7 +85,7 @@ function CompanyCard({ company }: { company: Company }) {
                   href={company.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline"
+                  className="text-gray-700 hover:underline"
                 >
                   {company.website}
                 </a>
@@ -124,7 +124,7 @@ function CompanyCard({ company }: { company: Company }) {
             {/* Stats */}
             <div className="flex items-center gap-4 text-sm">
               <div className="flex items-center gap-1">
-                <TrendingUp className="h-4 w-4 text-emerald-500" />
+                <TrendingUp className="h-4 w-4 text-gray-700" />
                 <span>
                   Avg CTC: ₹{(company.averageCTC / 100000).toFixed(1)}L
                 </span>
@@ -191,7 +191,7 @@ export default function CompaniesPage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl font-bold">Company Management</h1>
-            <p className="text-muted-foreground">
+            <p className="text-gray-600">
               Central CRM for all recruiting companies
             </p>
           </div>
@@ -272,14 +272,14 @@ export default function CompaniesPage() {
         <div className="grid gap-4 sm:grid-cols-4">
           <Card>
             <CardContent className="p-4">
-              <p className="text-sm text-muted-foreground">Total Companies</p>
+              <p className="text-sm text-gray-600">Total Companies</p>
               <p className="text-2xl font-bold">{mockCompanies.length}</p>
             </CardContent>
           </Card>
-          <Card className="border-emerald-200 bg-emerald-50/50">
+          <Card className="border-gray-200 bg-gray-50/50">
             <CardContent className="p-4">
-              <p className="text-sm text-emerald-700">Active</p>
-              <p className="text-2xl font-bold text-emerald-700">
+              <p className="text-sm text-gray-700">Active</p>
+              <p className="text-2xl font-bold text-gray-700">
                 {
                   mockCompanies.filter((c) => c.contactStatus === "active")
                     .length
@@ -289,7 +289,7 @@ export default function CompaniesPage() {
           </Card>
           <Card>
             <CardContent className="p-4">
-              <p className="text-sm text-muted-foreground">Inactive</p>
+              <p className="text-sm text-gray-600">Inactive</p>
               <p className="text-2xl font-bold">
                 {
                   mockCompanies.filter((c) => c.contactStatus === "inactive")
@@ -300,7 +300,7 @@ export default function CompaniesPage() {
           </Card>
           <Card>
             <CardContent className="p-4">
-              <p className="text-sm text-muted-foreground">Total Hires</p>
+              <p className="text-sm text-gray-600">Total Hires</p>
               <p className="text-2xl font-bold">
                 {mockCompanies.reduce(
                   (acc, c) =>
@@ -320,7 +320,7 @@ export default function CompaniesPage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex gap-3">
             <div className="relative flex-1 min-w-[250px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
               <Input
                 placeholder="Search companies..."
                 className="pl-9"
@@ -345,7 +345,7 @@ export default function CompaniesPage() {
         <div className="grid gap-4">
           {filteredCompanies.length === 0 ? (
             <Card>
-              <CardContent className="p-12 text-center text-muted-foreground">
+              <CardContent className="p-12 text-center text-gray-600">
                 No companies found matching your criteria.
               </CardContent>
             </Card>

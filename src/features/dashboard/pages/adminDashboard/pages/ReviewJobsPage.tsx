@@ -50,7 +50,7 @@ function ReviewJobCard({
   const statusConfig = {
     pending: { color: "bg-amber-100 text-amber-700", icon: Clock },
     verified: { color: "bg-emerald-100 text-emerald-700", icon: CheckCircle2 },
-    rejected: { color: "bg-red-100 text-red-700", icon: XCircle },
+    rejected: { color: "bg-yellow-100 text-red-700", icon: XCircle },
   };
 
   const submitterConfig = {
