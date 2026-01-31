@@ -217,7 +217,6 @@ export default function OpportunitiesPage() {
     indeed: false,
     glassdoor: false,
   });
-  const [isScraping, setIsScraping] = useState(false);
 
   const filteredOpportunities = opportunities.filter((opp) => {
     const matchesSearch =
