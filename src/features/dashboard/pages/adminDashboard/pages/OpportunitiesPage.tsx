@@ -270,9 +270,9 @@ export default function OpportunitiesPage() {
     return activeSources * periodMultiplier;
   };
 
-  const handleScrape = async () => {
+  const handleScrape = () => {
     const activeSources = Object.entries(selectedSources)
-      .filter(([_, enabled]) => enabled)
+      .filter(([, enabled]) => enabled)
       .map(([source]) => source);
 
     if (activeSources.length === 0) {
@@ -280,17 +280,41 @@ export default function OpportunitiesPage() {
       return;
     }
 
-    setIsScraping(true);
-    toast.loading("Scraping jobs from selected sources...");
+    // Close dialog and show success message immediately
+    setScrapeDialogOpen(false);
+    toast.success(
+      "Scraping initiated! Relevant companies will be shown and mailed to you shortly.",
+      { duration: 6000 },
+    );
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsScraping(false);
-      setScrapeDialogOpen(false);
-      toast.success(
-        `Successfully scraped ${getEstimatedJobs()} jobs from ${activeSources.length} source(s)`,
-      );
-    }, 3000);
+    // Make API call in background without blocking UI
+    const scraperUrl =
+      import.meta.env.VITE_SCRAPER_URL || "http://localhost:8000";
+
+    fetch(`${scraperUrl}/scrape-json`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        search_terms: activeSources.map((source) => {
+          // Map source names to relevant search terms
+          const termMap: Record<string, string> = {
+            linkedin: "Software Engineer",
+            internshala: "Internship",
+            naukri: "Developer",
+            indeed: "Tech Jobs",
+            glassdoor: "Engineering",
+          };
+          return termMap[source] || "Jobs";
+        }),
+        locations: ["India", "Remote"],
+        period: selectedPeriod,
+      }),
+    }).catch((error) => {
+      console.error("Scraping error:", error);
+      // Silently fail - user already got success message
+    });
   };
 
   return (
@@ -422,30 +446,17 @@ export default function OpportunitiesPage() {
                   <Button
                     variant="outline"
                     onClick={() => setScrapeDialogOpen(false)}
-                    disabled={isScraping}
                     className="border-black"
                   >
                     Cancel
                   </Button>
                   <Button
                     onClick={handleScrape}
-                    disabled={
-                      isScraping ||
-                      Object.values(selectedSources).every((v) => !v)
-                    }
+                    disabled={Object.values(selectedSources).every((v) => !v)}
                     className="bg-yellow-600 hover:bg-yellow-700 text-white"
                   >
-                    {isScraping ? (
-                      <>
-                        <Clock className="mr-2 h-4 w-4 animate-spin" />
-                        Scraping...
-                      </>
-                    ) : (
-                      <>
-                        <Download className="mr-2 h-4 w-4" />
-                        Start Scraping
-                      </>
-                    )}
+                    <Download className="mr-2 h-4 w-4" />
+                    Start Scraping
                   </Button>
                 </DialogFooter>
               </DialogContent>
