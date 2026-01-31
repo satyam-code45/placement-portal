@@ -1,0 +1,15 @@
+export { default as AdminDashboardPage } from "./AdminDashboardPage";
+export { default as OpportunitiesPage } from "./OpportunitiesPage";
+export { default as AddOpportunityPage } from "./AddOpportunityPage";
+export { default as CompaniesPage } from "./CompaniesPage";
+export { default as OutreachPage } from "./OutreachPage";
+export { default as HeadlinesPage } from "./HeadlinesPage";
+export { default as StudentsAnalyticsPage } from "./StudentsAnalyticsPage";
+export { default as CompanyAnalyticsPage } from "./CompanyAnalyticsPage";
+export { default as MockInterviewsPage } from "./MockInterviewsPage";
+export { default as ReviewJobsPage } from "./ReviewJobsPage";
+export { default as AlumniPage } from "./AlumniPage";
+export { default as AnnouncementsPage } from "./AnnouncementsPage";
+export { default as ReportsPage } from "./ReportsPage";
+export { default as UsersPage } from "./UsersPage";
+export { default as SettingsPage } from "./SettingsPage";
