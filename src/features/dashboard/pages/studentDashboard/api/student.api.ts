@@ -1,48 +1,52 @@
 import type { Resume, ResumeCompletenessCheck, Student } from "../types";
-import { mockApiCall, generateId } from "./client";
-import { mockStudent, mockResume } from "./mockData";
- 
-
-// In-memory storage for mock data mutations
-let studentData = { ...mockStudent };
-let resumeData = mockResume ? { ...mockResume } : null;
+import { mockApiCall } from "./client";
+import { mockStudent } from "./mockData";
+import api from "@/services/api";
 
 export const studentApi = {
   // Get student profile
   getProfile: async (): Promise<Student> => {
-    return mockApiCall(studentData);
+    return mockApiCall(mockStudent);
   },
 
   // Update student profile
   updateProfile: async (updates: Partial<Student>): Promise<Student> => {
-    studentData = { ...studentData, ...updates, updatedAt: new Date().toISOString() };
-    return mockApiCall(studentData);
+    return mockApiCall({ ...mockStudent, ...updates });
   },
 
   // Get resume
   getResume: async (): Promise<Resume | null> => {
-    return mockApiCall(resumeData);
+    try {
+      const response = await api.get<{
+        success: boolean;
+        resume: Resume | null;
+      }>("/student/resume");
+      return response.data.resume;
+    } catch {
+      return null;
+    }
   },
 
-  // Upload resume (mock)
+  // Upload resume
   uploadResume: async (file: File): Promise<Resume> => {
-    const newResume: Resume = {
-      id: generateId(),
-      studentId: studentData.id,
-      fileName: file.name,
-      fileUrl: URL.createObjectURL(file),
-      fileSize: file.size,
-      uploadedAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    resumeData = newResume;
-    return mockApiCall(newResume);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await api.post<{ success: boolean; resume: Resume }>(
+      "/auth/student/upload",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+    return response.data.resume;
   },
 
   // Delete resume
   deleteResume: async (): Promise<void> => {
-    resumeData = null;
-    return mockApiCall(undefined);
+    await api.delete("/student/resume");
   },
 
   // Check resume completeness based on profile
@@ -74,7 +78,9 @@ export const studentApi = {
     if (studentData.skills.length >= 3) score++;
     else {
       missingFields.push("Skills (minimum 3)");
-      suggestions.push("Add at least 3 relevant skills to improve your profile visibility.");
+      suggestions.push(
+        "Add at least 3 relevant skills to improve your profile visibility.",
+      );
     }
 
     if (studentData.subjects.length > 0) score++;
@@ -87,15 +93,22 @@ export const studentApi = {
     }
 
     if (studentData.skills.length >= 5) score++;
-    else suggestions.push("Consider adding more skills to match more job requirements.");
+    else
+      suggestions.push(
+        "Consider adding more skills to match more job requirements.",
+      );
 
     // Generate suggestions based on profile
     if (studentData.cgpa < 7.5) {
-      suggestions.push("Focus on projects and skills to compensate for CGPA requirements.");
+      suggestions.push(
+        "Focus on projects and skills to compensate for CGPA requirements.",
+      );
     }
 
     if (!studentData.skills.includes("Git")) {
-      suggestions.push("Add Git to your skills - it's required by most employers.");
+      suggestions.push(
+        "Add Git to your skills - it's required by most employers.",
+      );
     }
 
     return mockApiCall({

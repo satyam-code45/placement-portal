@@ -3,6 +3,8 @@ import MainLayout from "./components/layout/MainLayout";
 import LandingPage from "./features/landing/LandingPage";
 import JobBoard from "./pages/JobBoard";
 import LoginPage from "./features/auth/pages/LoginPage";
+import SignupPage from "./features/auth/pages/SignupPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Dashboards
 import StudentDashboard from "./features/dashboard/pages/studentDashboard/StudentDashboard";
@@ -29,6 +31,7 @@ function App() {
             />
           }
         />
+        <Route path="signup" element={<SignupPage />} />
         <Route
           path="company/login"
           element={
@@ -63,10 +66,38 @@ function App() {
         />
 
         {/* Dashboard Routes (Protected in real app) */}
-        <Route path="dashboard/student/*" element={<StudentDashboard />} />
-        <Route path="dashboard/company" element={<CompanyDashboard />} />
-        <Route path="dashboard/admin/*" element={<AdminDashboard />} />
-        <Route path="dashboard/super-admin" element={<SuperAdminDashboard />} />
+        <Route
+          path="dashboard/student/*"
+          element={
+            <ProtectedRoute allowedRoles={["STUDENT", "ADMIN", "SUPERADMIN"]}>
+              <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="dashboard/company"
+          element={
+            <ProtectedRoute allowedRoles={["COMPANY", "ADMIN", "SUPERADMIN"]}>
+              <CompanyDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="dashboard/admin/*"
+          element={
+            <ProtectedRoute allowedRoles={["ADMIN", "SUPERADMIN"]}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="dashboard/super-admin"
+          element={
+            <ProtectedRoute allowedRoles={["SUPERADMIN"]}>
+              <SuperAdminDashboard />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,15 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Student } from "../types";
-import { mockStudent } from "../api/mockData";
- 
 
 interface AuthState {
   isAuthenticated: boolean;
   student: Student | null;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  setStudent: (student: Student | null) => void;
   updateStudent: (updates: Partial<Student>) => void;
+  clearStudent: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -18,18 +16,14 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       student: null,
 
-      login: async (email: string, _password: string) => {
-        // Mock login - in production this would call an API
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        
-        // For mock purposes, accept any email/password
+      setStudent: (student: Student | null) => {
         set({
-          isAuthenticated: true,
-          student: { ...mockStudent, email },
+          isAuthenticated: !!student,
+          student,
         });
       },
 
-      logout: () => {
+      clearStudent: () => {
         set({
           isAuthenticated: false,
           student: null,
@@ -43,7 +37,7 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: "auth-storage",
-    }
-  )
+      name: "student-dashboard-storage",
+    },
+  ),
 );
