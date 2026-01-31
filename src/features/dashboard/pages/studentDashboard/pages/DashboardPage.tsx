@@ -54,7 +54,7 @@ function StatCard({
 
   return (
     <div
-      className="relative bg-[#BF8A10]/90 rounded-2xl border-3 border-black overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:translate-y-[-4px]"
+      className="relative bg-[#ffba4b] rounded-2xl border-3 border-black overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:translate-y-[-4px]"
       style={{
         boxShadow: "8px 8px 0 rgba(0, 0, 0, 0.1)",
         transition:

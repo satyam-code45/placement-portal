@@ -41,41 +41,37 @@ function StatCard({
   trend?: { value: number; positive: boolean };
   variant?: "default" | "success" | "warning" | "info" | "destructive";
 }) {
-  const variantStyles = {
-    default: "bg-gray-100 text-gray-900",
-    success: "bg-gray-100 text-gray-900",
-    warning: "bg-yellow-50 text-red-600",
-    info: "bg-gray-100 text-gray-900",
-    destructive: "bg-yellow-100 text-red-600",
-  };
-
   return (
-    <div className="relative group">
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-white rounded-2xl transform group-hover:scale-[1.02] transition-transform duration-200" />
-      <div className="relative border-2 border-gray-900 rounded-2xl p-6 bg-white hover:shadow-xl transition-all duration-200">
-        <div className="flex items-start justify-between">
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">
-              {title}
-            </p>
-            <p className="text-4xl font-bold text-gray-900">{value}</p>
-            {description && (
-              <p className="text-sm text-gray-600">{description}</p>
-            )}
-            {trend && (
-              <div
-                className={`flex items-center gap-1.5 text-sm font-medium ${trend.positive ? "text-gray-900" : "text-red-600"}`}
-              >
-                <TrendingUp
-                  className={`h-4 w-4 ${!trend.positive && "rotate-180"}`}
-                />
-                <span>{trend.value}% from last month</span>
-              </div>
-            )}
-          </div>
-          <div className={`rounded-full p-4 ${variantStyles[variant]}`}>
-            <Icon className="h-7 w-7" />
-          </div>
+    <div className="relative group h-full">
+      {/* Shadow Layer */}
+      <div className="absolute inset-0 bg-black rounded-3xl translate-x-2 translate-y-2" />
+
+      {/* Main Card */}
+      <div className="relative bg-[#ffba4b] rounded-3xl border-3 border-black p-6 transition-transform duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1 h-full flex flex-col">
+        {/* Icon Badge - Top Right */}
+        <div className="absolute -top-3 -right-3 bg-black rounded-full p-4 shadow-lg">
+          <Icon className="h-6 w-6 text-white" />
+        </div>
+
+        {/* Content */}
+        <div className="space-y-3 pt-2 flex-1">
+          <p className="text-sm font-bold text-black uppercase tracking-wider">
+            {title}
+          </p>
+          <p className="text-5xl font-bold text-black">{value}</p>
+          {description && (
+            <p className="text-sm text-black/70 font-medium">{description}</p>
+          )}
+          {trend && (
+            <div
+              className={`flex items-center gap-1.5 text-sm font-semibold ${trend.positive ? "text-black" : "text-red-600"}`}
+            >
+              <TrendingUp
+                className={`h-4 w-4 ${!trend.positive && "rotate-180"}`}
+              />
+              <span>{trend.value}% from last month</span>
+            </div>
+          )}
         </div>
       </div>
     </div>
