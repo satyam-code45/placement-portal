@@ -32,7 +32,7 @@ export function AppHeader() {
       .toUpperCase() || "JD";
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between bg-white rounded-2xl px-4 shadow-sm md:px-6">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between bg-white rounded-2xl px-4 shadow-sm md:px-6 border-2 border-gray-900">
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"
@@ -44,10 +44,10 @@ export function AppHeader() {
           <span className="sr-only">Toggle sidebar</span>
         </Button>
         <div className="hidden md:block">
-          <h2 className="text-lg font-semibold text-foreground">
+          <h2 className="text-lg font-semibold text-gray-900">
             Campus Placement Portal
           </h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-gray-600">
             Your gateway to career opportunities
           </p>
         </div>
@@ -57,7 +57,7 @@ export function AppHeader() {
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5" />
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-info" />
+          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-yellow-600" />
           <span className="sr-only">Notifications</span>
         </Button>
 
@@ -66,11 +66,11 @@ export function AppHeader() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="gap-2 pl-2 pr-3">
               <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-primary text-primary-foreground text-sm font-medium">
+                <AvatarFallback className="bg-yellow-600 text-white text-sm font-medium">
                   {initials}
                 </AvatarFallback>
               </Avatar>
-              <span className="hidden text-sm font-medium md:inline-block">
+              <span className="hidden text-sm font-medium md:inline-block text-gray-900">
                 {student?.fullName || "John Doe"}
               </span>
             </Button>

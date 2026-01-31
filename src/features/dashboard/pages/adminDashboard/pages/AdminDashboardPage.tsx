@@ -50,32 +50,35 @@ function StatCard({
   };
 
   return (
-    <Card className="border shadow-sm hover:shadow-md transition-shadow duration-200 bg-white">
-      <CardContent className="p-5">
+    <div className="relative group">
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-white rounded-2xl transform group-hover:scale-[1.02] transition-transform duration-200" />
+      <div className="relative border-2 border-gray-900 rounded-2xl p-6 bg-white hover:shadow-xl transition-all duration-200">
         <div className="flex items-start justify-between">
-          <div className="space-y-1">
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <p className="text-3xl font-bold text-gray-900">{value}</p>
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">
+              {title}
+            </p>
+            <p className="text-4xl font-bold text-gray-900">{value}</p>
             {description && (
-              <p className="text-xs text-muted-foreground">{description}</p>
+              <p className="text-sm text-gray-600">{description}</p>
             )}
             {trend && (
               <div
-                className={`flex items-center gap-1 text-xs ${trend.positive ? "text-gray-900" : "text-red-600"}`}
+                className={`flex items-center gap-1.5 text-sm font-medium ${trend.positive ? "text-gray-900" : "text-red-600"}`}
               >
                 <TrendingUp
-                  className={`h-3 w-3 ${!trend.positive && "rotate-180"}`}
+                  className={`h-4 w-4 ${!trend.positive && "rotate-180"}`}
                 />
                 <span>{trend.value}% from last month</span>
               </div>
             )}
           </div>
-          <div className={`rounded-xl p-3 ${variantStyles[variant]}`}>
-            <Icon className="h-6 w-6" />
+          <div className={`rounded-full p-4 ${variantStyles[variant]}`}>
+            <Icon className="h-7 w-7" />
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 

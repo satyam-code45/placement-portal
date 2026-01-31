@@ -64,15 +64,22 @@ export function AppSidebar() {
       <aside
         className={cn(
           "fixed left-0 top-0 z-50 h-full w-[90%] max-w-sm lg:hidden",
-          "bg-white rounded-r-3xl shadow-xl",
+          "bg-gray-900 rounded-r-3xl shadow-xl",
           "transition-transform duration-300",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5">
-          <span className="text-xl font-extrabold">CampusConnect</span>
-          <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+          <span className="text-xl font-extrabold text-white">
+            CampusConnect
+          </span>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+            className="text-white hover:bg-gray-800"
+          >
             <X className="h-5 w-5" />
           </Button>
         </div>
@@ -84,7 +91,7 @@ export function AppSidebar() {
               key={item.label}
               to={item.path}
               onClick={toggleSidebar}
-              className="block text-lg font-medium text-zinc-600"
+              className="block text-lg font-medium text-gray-300 hover:text-white"
             >
               {item.label}
             </Link>
@@ -100,11 +107,11 @@ export function AppSidebar() {
             to="/dashboard/student"
             className="flex items-center gap-3 overflow-hidden min-w-0"
           >
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform hover:scale-105">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-yellow-600 text-white shadow-sm transition-transform hover:scale-105">
               <GraduationCap className="h-5 w-5" />
             </div>
             {sidebarOpen && (
-              <span className="text-lg font-bold tracking-tight text-foreground/80 truncate">
+              <span className="text-lg font-bold tracking-tight text-white truncate">
                 CampusConnect
               </span>
             )}
@@ -114,7 +121,7 @@ export function AppSidebar() {
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
-            className="text-muted-foreground hover:text-foreground hover:bg-transparent"
+            className="text-gray-300 hover:text-white hover:bg-gray-800"
           >
             {sidebarOpen ? (
               <ChevronLeft className="h-5 w-5" />
@@ -136,15 +143,15 @@ export function AppSidebar() {
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200",
                   isActive
-                    ? "bg-primary/10 text-primary shadow-sm"
-                    : "text-muted-foreground hover:bg-zinc-50 hover:text-foreground",
+                    ? "bg-yellow-600 text-white shadow-md"
+                    : "text-gray-300 hover:bg-gray-800 hover:text-white",
                   !sidebarOpen && "justify-center px-0",
                 )}
               >
                 <item.icon
                   className={cn(
                     "shrink-0",
-                    isActive ? "text-primary" : "text-black",
+                    isActive ? "text-white" : "text-gray-300",
                     "h-5 w-5",
                   )}
                 />
@@ -168,10 +175,8 @@ export function AppSidebar() {
 
         {/* Footer */}
         {sidebarOpen && (
-          <div className="p-4 mt-auto border-t border-dashed border-slate-200">
-            <p className="text-xs text-center text-muted-foreground/60">
-              © 2026 PlaceHub
-            </p>
+          <div className="p-4 mt-auto border-t border-dashed border-gray-700">
+            <p className="text-xs text-center text-gray-400">© 2026 PlaceHub</p>
           </div>
         )}
       </div>

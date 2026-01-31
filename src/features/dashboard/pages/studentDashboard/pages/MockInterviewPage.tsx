@@ -1,5 +1,11 @@
-import { Brain, Video, Sparkles, ArrowRight, CheckCircle2 } from "lucide-react"; 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Brain, Video, Sparkles, ArrowRight, CheckCircle2 } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AppLayout } from "../component/layout";
 
@@ -29,11 +35,12 @@ export default function MockInterviewPage() {
             <div className="space-y-2">
               <CardTitle className="text-2xl">Get Interview Ready</CardTitle>
               <CardDescription className="text-base">
-                Practice with our AI-powered interview platform and boost your confidence
+                Practice with our AI-powered interview platform and boost your
+                confidence
               </CardDescription>
             </div>
           </CardHeader>
-          
+
           <CardContent className="space-y-6">
             {/* Features */}
             <div className="grid gap-4 md:grid-cols-2">
@@ -88,8 +95,8 @@ export default function MockInterviewPage() {
 
             {/* CTA Button */}
             <div className="flex justify-center pt-4">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="w-full md:w-auto px-8"
                 onClick={handleStartInterview}
               >
@@ -109,9 +116,10 @@ export default function MockInterviewPage() {
               <div>
                 <h3 className="font-semibold mb-1">Pro Tip</h3>
                 <p className="text-sm text-muted-foreground">
-                  Practice regularly to build confidence. The more you practice, the better 
-                  you'll perform in real interviews. Try to simulate real interview conditions 
-                  by dressing professionally and choosing a quiet space.
+                  Practice regularly to build confidence. The more you practice,
+                  the better you'll perform in real interviews. Try to simulate
+                  real interview conditions by dressing professionally and
+                  choosing a quiet space.
                 </p>
               </div>
             </div>

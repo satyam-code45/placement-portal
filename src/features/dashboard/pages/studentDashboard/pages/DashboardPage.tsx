@@ -45,32 +45,53 @@ function StatCard({
   variant?: "default" | "success" | "warning" | "info" | "destructive";
 }) {
   const variantStyles = {
-    default: "bg-primary/10 text-primary",
-    success: "bg-success/10 text-success",
-    warning: "bg-warning/10 text-warning",
-    info: "bg-info/10 text-info",
-    destructive: "bg-destructive/10 text-destructive",
+    default: "bg-gray-900 text-white",
+    success: "bg-gray-900 text-white",
+    warning: "bg-gray-900 text-white",
+    info: "bg-gray-900 text-white",
+    destructive: "bg-gray-900 text-white",
   };
 
   return (
-    <Card className="border shadow-lg hover:shadow-xl transition-shadow duration-200 bg-white">
-      <CardContent className="p-6 lg:p-7">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <p className="text-4xl font-bold mt-2 text-gray-900">{value}</p>
-            {description && (
-              <p className="text-xs text-muted-foreground mt-2">
-                {description}
-              </p>
-            )}
-          </div>
-          <div className={`rounded-xl p-3.5 ${variantStyles[variant]}`}>
-            <Icon className="h-7 w-7" />
-          </div>
+    <div
+      className="relative bg-[#BF8A10]/90 rounded-2xl border-3 border-black overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:translate-y-[-4px]"
+      style={{
+        boxShadow: "8px 8px 0 rgba(0, 0, 0, 0.1)",
+        transition:
+          "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1)",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow = "16px 16px 0 rgba(0, 0, 0, 0.2)";
+        e.currentTarget.style.transform =
+          "translateZ(20px) rotateX(5deg) rotateY(-5deg)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow = "8px 8px 0 rgba(0, 0, 0, 0.1)";
+        e.currentTarget.style.transform = "translateZ(0) rotateX(0) rotateY(0)";
+      }}
+    >
+      {/* Shine effect */}
+      <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-gradient-to-br from-white/30 via-transparent to-transparent rotate-[-30deg] pointer-events-none" />
+
+      {/* Top handle badge */}
+      <div
+        className={`absolute top-0 right-5 px-4 py-2 rounded-b-2xl border-2 border-t-0 border-black font-bold text-sm ${variantStyles[variant]} transition-all duration-300`}
+      >
+        <Icon className="h-5 w-5" />
+      </div>
+
+      <div className="p-6 pt-14">
+        <div className="space-y-2">
+          <p className="text-lg font-bold text-gray-900 uppercase tracking-wide">
+            {title}
+          </p>
+          <p className="text-4xl font-bold text-gray-900">{value}</p>
+          {description && (
+            <p className="text-sm text-gray-700 font-medium">{description}</p>
+          )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
@@ -86,19 +107,19 @@ export default function DashboardPage() {
     <AppLayout>
       <div className="space-y-10 animate-fade-in max-w-full">
         {/* Welcome Header */}
-        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between bg-gradient-to-r from-primary/8 via-primary/12 to-transparent p-8 rounded-xl shadow-sm border border-primary/10 mb-6">
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between bg-gradient-to-r from-gray-50 via-gray-100 to-white p-8 rounded-xl border-2 border-gray-900">
           <div>
             <h1 className="text-2xl font-bold md:text-3xl lg:text-4xl text-gray-900">
               Welcome back, {student?.fullName?.split(" ")[0] || "Student"}!
             </h1>
-            <p className="text-muted-foreground mt-2 text-base">
+            <p className="text-gray-600 mt-2 text-base">
               Here's an overview of your placement journey
             </p>
           </div>
           <Button
             asChild
             size="lg"
-            className="shadow-md hover:shadow-lg transition-shadow"
+            className="bg-yellow-600 hover:bg-yellow-700 text-white shadow-md hover:shadow-lg transition-all"
           >
             <Link to={`${STUDENT_DASHBOARD_ROUTE}/jobs`}>
               <Briefcase className="mr-2 h-5 w-5" />
@@ -108,17 +129,19 @@ export default function DashboardPage() {
         </div>
 
         {/* Profile Completion */}
-        <Card className="border shadow-md bg-gradient-to-r from-white to-slate-50/50">
+        <Card className="border-2 border-gray-900 shadow-md bg-white rounded-2xl">
           <CardContent className="p-8 lg:p-10">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <FileText className="h-5 w-5 text-primary" />
+                  <div className="p-2 rounded-lg bg-gray-900">
+                    <FileText className="h-5 w-5 text-white" />
                   </div>
-                  <h3 className="font-semibold text-lg">Profile Completion</h3>
+                  <h3 className="font-semibold text-lg text-gray-900">
+                    Profile Completion
+                  </h3>
                 </div>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-gray-600 mb-4">
                   Complete your profile to improve visibility to recruiters
                 </p>
                 {profileLoading ? (
@@ -127,13 +150,13 @@ export default function DashboardPage() {
                   <div className="space-y-3">
                     <Progress value={profileCompletion || 0} className="h-3" />
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground font-medium">
+                      <span className="text-gray-600 font-medium">
                         {profileCompletion || 0}% complete
                       </span>
                       {profileCompletion && profileCompletion < 100 && (
                         <Link
                           to={`${STUDENT_DASHBOARD_ROUTE}/profile`}
-                          className="text-primary hover:underline font-medium"
+                          className="text-yellow-600 hover:text-yellow-700 hover:underline font-medium"
                         >
                           Complete Profile →
                         </Link>
@@ -143,11 +166,11 @@ export default function DashboardPage() {
                 )}
               </div>
               {resumeCheck && resumeCheck.score < 100 && (
-                <div className="lg:w-72 p-5 rounded-xl bg-amber-50 border border-amber-200/50 shadow-sm">
-                  <p className="text-sm font-semibold text-amber-700">
+                <div className="lg:w-72 p-5 rounded-xl bg-yellow-50 border-2 border-gray-900">
+                  <p className="text-sm font-semibold text-gray-900">
                     Resume Score: {resumeCheck.score}%
                   </p>
-                  <p className="text-xs text-amber-600/80 mt-2">
+                  <p className="text-xs text-gray-700 mt-2">
                     {resumeCheck.suggestions[0]}
                   </p>
                 </div>
@@ -201,10 +224,14 @@ export default function DashboardPage() {
 
         {/* Application Status Summary */}
         <div className="grid gap-8 xl:grid-cols-2">
-          <Card className="border shadow-md">
+          <Card className="border-2 border-gray-900 shadow-md rounded-2xl bg-white">
             <CardHeader className="pb-6">
-              <CardTitle className="text-xl">Application Status</CardTitle>
-              <CardDescription>Track your job applications</CardDescription>
+              <CardTitle className="text-xl text-gray-900">
+                Application Status
+              </CardTitle>
+              <CardDescription className="text-gray-600">
+                Track your job applications
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {statsLoading ? (
@@ -217,37 +244,50 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-info/10">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-gray-100 border border-gray-300">
                     <div className="flex items-center gap-3">
-                      <Clock className="h-5 w-5 text-info" />
-                      <span className="font-medium">Applied</span>
+                      <Clock className="h-5 w-5 text-gray-900" />
+                      <span className="font-medium text-gray-900">Applied</span>
                     </div>
-                    <Badge variant="secondary">
+                    <Badge
+                      variant="secondary"
+                      className="bg-gray-900 text-white"
+                    >
                       {stats?.appliedCount || 0}
                     </Badge>
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-success/10">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-gray-100 border border-gray-300">
                     <div className="flex items-center gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-success" />
-                      <span className="font-medium">Selected</span>
+                      <CheckCircle2 className="h-5 w-5 text-gray-900" />
+                      <span className="font-medium text-gray-900">
+                        Selected
+                      </span>
                     </div>
-                    <Badge variant="secondary">
+                    <Badge
+                      variant="secondary"
+                      className="bg-gray-900 text-white"
+                    >
                       {stats?.selectedCount || 0}
                     </Badge>
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-warning/10">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-gray-100 border border-gray-300">
                     <div className="flex items-center gap-3">
-                      <Users className="h-5 w-5 text-warning" />
-                      <span className="font-medium">Interview Scheduled</span>
+                      <Users className="h-5 w-5 text-gray-900" />
+                      <span className="font-medium text-gray-900">
+                        Interview Scheduled
+                      </span>
                     </div>
-                    <Badge variant="secondary">
+                    <Badge
+                      variant="secondary"
+                      className="bg-gray-900 text-white"
+                    >
                       {stats?.interviewCount || 0}
                     </Badge>
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-destructive/10">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-red-50 border border-red-300">
                     <div className="flex items-center gap-3">
-                      <XCircle className="h-5 w-5 text-destructive" />
-                      <span className="font-medium">Rejected</span>
+                      <XCircle className="h-5 w-5 text-red-600" />
+                      <span className="font-medium text-red-600">Rejected</span>
                     </div>
                     <Badge variant="secondary">
                       {stats?.rejectedCount || 0}
@@ -264,10 +304,14 @@ export default function DashboardPage() {
           </Card>
 
           {/* Recent Jobs */}
-          <Card className="border shadow-md">
+          <Card className="border-2 border-gray-900 shadow-md rounded-2xl bg-white">
             <CardHeader className="pb-6">
-              <CardTitle className="text-xl">Recently Posted Jobs</CardTitle>
-              <CardDescription>Latest opportunities for you</CardDescription>
+              <CardTitle className="text-xl text-gray-900">
+                Recently Posted Jobs
+              </CardTitle>
+              <CardDescription className="text-gray-600">
+                Latest opportunities for you
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {jobsLoading ? (
@@ -284,20 +328,25 @@ export default function DashboardPage() {
                     <Link
                       key={job.id}
                       to={`${STUDENT_DASHBOARD_ROUTE}/jobs/${job.id}`}
-                      className="block p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors"
+                      className="block p-3 rounded-lg border-2 border-gray-900 hover:bg-gray-50 transition-all hover:shadow-md"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0 flex-1">
-                          <p className="font-medium truncate">{job.title}</p>
-                          <p className="text-sm text-muted-foreground truncate">
+                          <p className="font-medium truncate text-gray-900">
+                            {job.title}
+                          </p>
+                          <p className="text-sm text-gray-600 truncate">
                             {job.company.name}
                           </p>
                         </div>
-                        <Badge variant="outline" className="shrink-0">
+                        <Badge
+                          variant="outline"
+                          className="shrink-0 border-gray-900 text-gray-900"
+                        >
                           {job.type === "internship" ? "Intern" : "FT"}
                         </Badge>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="text-xs text-gray-600 mt-1">
                         Posted {formatDistanceToNow(new Date(job.postedAt))} ago
                       </p>
                     </Link>

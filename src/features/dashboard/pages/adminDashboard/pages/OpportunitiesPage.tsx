@@ -16,12 +16,23 @@ import {
   MapPin,
   IndianRupee,
   Calendar,
+  Download,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -197,6 +208,16 @@ export default function OpportunitiesPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [opportunities, setOpportunities] = useState(mockOpportunities);
+  const [scrapeDialogOpen, setScrapeDialogOpen] = useState(false);
+  const [selectedPeriod, setSelectedPeriod] = useState("7d");
+  const [selectedSources, setSelectedSources] = useState({
+    linkedin: true,
+    internshala: true,
+    naukri: true,
+    indeed: false,
+    glassdoor: false,
+  });
+  const [isScraping, setIsScraping] = useState(false);
 
   const filteredOpportunities = opportunities.filter((opp) => {
     const matchesSearch =
@@ -232,6 +253,43 @@ export default function OpportunitiesPage() {
     (o) => o.status === "approved",
   ).length;
 
+  const handleSourceToggle = (source: keyof typeof selectedSources) => {
+    setSelectedSources(prev => ({ ...prev, [source]: !prev[source] }));
+  };
+
+  const getEstimatedJobs = () => {
+    const activeSources = Object.values(selectedSources).filter(Boolean).length;
+    const periodMultiplier = {
+      '1d': 10,
+      '3d': 25,
+      '7d': 50,
+      '14d': 100,
+      '30d': 200,
+    }[selectedPeriod] || 50;
+    return activeSources * periodMultiplier;
+  };
+
+  const handleScrape = async () => {
+    const activeSources = Object.entries(selectedSources)
+      .filter(([_, enabled]) => enabled)
+      .map(([source]) => source);
+
+    if (activeSources.length === 0) {
+      toast.error("Please select at least one source");
+      return;
+    }
+
+    setIsScraping(true);
+    toast.loading("Scraping jobs from selected sources...");
+
+    // Simulate API call
+    setTimeout(() => {
+      setIsScraping(false);
+      setScrapeDialogOpen(false);
+      toast.success(`Successfully scraped ${getEstimatedJobs()} jobs from ${activeSources.length} source(s)`);
+    }, 3000);
+  };
+
   return (
     <AdminLayout>
       <div className="space-y-6 animate-fade-in">
@@ -243,12 +301,124 @@ export default function OpportunitiesPage() {
               Manage job postings and internship opportunities
             </p>
           </div>
-          <Button asChild>
-            <Link to="/dashboard/admin/opportunities/add">
-              <Plus className="mr-2 h-4 w-4" />
-              Add Opportunity
-            </Link>
-          </Button>
+          <div className="flex gap-3">
+            <Dialog open={scrapeDialogOpen} onOpenChange={setScrapeDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="border-black hover:bg-yellow-600 hover:text-white">
+                  <Download className="mr-2 h-4 w-4" />
+                  Scrape Jobs
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[525px] border-2 border-black">
+                <DialogHeader>
+                  <DialogTitle>Scrape Jobs from Platforms</DialogTitle>
+                  <DialogDescription>
+                    Select time period and sources to automatically fetch job listings
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-6 py-4">
+                  {/* Time Period Selection */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-semibold">Time Period</Label>
+                    <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                      <SelectTrigger className="border-2 border-gray-300">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1d">Last 24 Hours</SelectItem>
+                        <SelectItem value="3d">Last 3 Days</SelectItem>
+                        <SelectItem value="7d">Last 7 Days</SelectItem>
+                        <SelectItem value="14d">Last 14 Days</SelectItem>
+                        <SelectItem value="30d">Last 30 Days</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Source Selection */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-semibold">Select Sources</Label>
+                    <div className="space-y-3 border-2 border-gray-200 rounded-lg p-4">
+                      {[
+                        { id: 'linkedin', label: 'LinkedIn', enabled: true },
+                        { id: 'internshala', label: 'Internshala', enabled: true },
+                        { id: 'naukri', label: 'Naukri.com', enabled: true },
+                        { id: 'indeed', label: 'Indeed (Coming Soon)', enabled: false },
+                        { id: 'glassdoor', label: 'Glassdoor (Coming Soon)', enabled: false },
+                      ].map(({ id, label, enabled }) => (
+                        <div key={id} className="flex items-center space-x-3">
+                          <input
+                            type="checkbox"
+                            id={id}
+                            checked={selectedSources[id as keyof typeof selectedSources]}
+                            onChange={() => enabled && handleSourceToggle(id as keyof typeof selectedSources)}
+                            disabled={!enabled}
+                            className="h-4 w-4 rounded border-2 border-gray-300 text-yellow-600 focus:ring-yellow-600 disabled:opacity-50"
+                          />
+                          <label
+                            htmlFor={id}
+                            className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed ${
+                              enabled ? 'cursor-pointer' : 'text-gray-400 cursor-not-allowed'
+                            }`}
+                          >
+                            {label}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Preview Stats */}
+                  <div className="rounded-lg bg-gray-50 border-2 border-gray-200 p-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Selected Sources:</span>
+                      <span className="font-semibold">
+                        {Object.values(selectedSources).filter(Boolean).length}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm mt-2">
+                      <span className="text-gray-600">Estimated Jobs:</span>
+                      <span className="font-semibold text-yellow-600">
+                        ~{getEstimatedJobs()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    variant="outline"
+                    onClick={() => setScrapeDialogOpen(false)}
+                    disabled={isScraping}
+                    className="border-black"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleScrape}
+                    disabled={isScraping || Object.values(selectedSources).every(v => !v)}
+                    className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                  >
+                    {isScraping ? (
+                      <>
+                        <Clock className="mr-2 h-4 w-4 animate-spin" />
+                        Scraping...
+                      </>
+                    ) : (
+                      <>
+                        <Download className="mr-2 h-4 w-4" />
+                        Start Scraping
+                      </>
+                    )}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            <Button asChild className="bg-yellow-600 hover:bg-yellow-700">
+              <Link to="/dashboard/admin/opportunities/add">
+                <Plus className="mr-2 h-4 w-4" />
+                Add Opportunity
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Stats */}

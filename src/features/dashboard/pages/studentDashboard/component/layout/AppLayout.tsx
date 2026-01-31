@@ -13,12 +13,12 @@ export function AppLayout({ children }: AppLayoutProps) {
   const sidebarOpen = useUIStore((state: any) => state.sidebarOpen);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-600 p-3 lg:p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 p-3 lg:p-4">
       <div className="h-[calc(100vh-1.5rem)] lg:h-[calc(100vh-2rem)] flex gap-3 lg:gap-4">
         {/* Container 1: Sidebar (rounded) */}
         <aside
           className={cn(
-            "bg-white rounded-2xl shadow-lg border transition-all duration-300 flex-shrink-0",
+            "bg-gray-900 rounded-2xl shadow-lg border border-gray-800 transition-all duration-300 flex-shrink-0",
             sidebarOpen ? "w-[19rem]" : "w-[4.5rem]",
           )}
         >
