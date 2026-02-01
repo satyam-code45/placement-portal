@@ -1,17 +1,43 @@
 import axios from "axios";
 
 const ORCHESTRATOR_BASE_URL =
-  import.meta.env.VITE_ORCHESTRATOR_URL || "http://localhost:8000";
+  import.meta.env.VITE_ORCHESTRATOR_URL || "http://localhost:8001";
 
 export interface StudentJobMatchRequest {
-  student_id: number;
+  studentId: number;
+  topK?: number;
+  jobsLimit?: number;
 }
 
 export interface StudentJobMatchResponse {
   success: boolean;
-  student?: any;
-  jobs_count?: number;
-  matched_jobs?: any[];
+  error?: string | null;
+  student?: {
+    id?: number;
+    email?: string;
+    name?: string;
+    skills?: string[];
+    atsScore?: number;
+  };
+  matches?: Array<{
+    jobId?: number | string;
+    title?: string;
+    company?: string;
+    location?: string | null;
+    jobType?: string | null;
+    score?: number;
+    reasoning?: any;
+    skill?: {
+      score?: number;
+      matched?: string[];
+      missing?: string[];
+    };
+  }>;
+  persisted?: {
+    matchRunId?: number;
+    savedMatches?: number;
+    jobIntelligenceRunId?: number;
+  };
 }
 
 export interface BatchStudentMatchRequest {
@@ -25,8 +51,8 @@ class StudentMatchingService {
   async matchStudent(studentId: number): Promise<StudentJobMatchResponse> {
     try {
       const response = await axios.post<StudentJobMatchResponse>(
-        `${ORCHESTRATOR_BASE_URL}/run/student-job-match`,
-        { student_id: studentId },
+        `${ORCHESTRATOR_BASE_URL}/run/student-matching`,
+        { studentId },
         {
           headers: {
             "Content-Type": "application/json",

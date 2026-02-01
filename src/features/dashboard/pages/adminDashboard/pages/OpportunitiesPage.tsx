@@ -296,19 +296,6 @@ export default function OpportunitiesPage() {
     setSelectedSources((prev) => ({ ...prev, [source]: !prev[source] }));
   };
 
-  const getEstimatedJobs = () => {
-    const activeSources = Object.values(selectedSources).filter(Boolean).length;
-    const periodMultiplier =
-      {
-        "1d": 10,
-        "3d": 25,
-        "7d": 50,
-        "14d": 100,
-        "30d": 200,
-      }[selectedPeriod] || 50;
-    return activeSources * periodMultiplier;
-  };
-
   const handleMatchStudents = async () => {
     setIsMatching(true);
     setMatchDialogOpen(false);
@@ -328,11 +315,13 @@ export default function OpportunitiesPage() {
 
       if (result.success) {
         toast.success(
-          `Successfully matched! Found ${result.jobs_count || 0} suitable jobs for the student.`,
+          `Successfully matched! Found ${result.matches?.length ?? 0} suitable jobs for the student.`,
           { duration: 6000 },
         );
       } else {
-        toast.error("Matching completed but no suitable jobs found.");
+        toast.error(
+          result.error || "Matching completed but no suitable jobs found.",
+        );
       }
 
       setMatchingProgress("");
@@ -442,7 +431,7 @@ export default function OpportunitiesPage() {
                 <Button
                   variant="outline"
                   className="border-black hover:bg-green-600 hover:text-white"
-                  disabled={isMatching || scrapedJobs.length === 0}
+                  disabled={isMatching}
                 >
                   <Sparkles className="mr-2 h-4 w-4" />
                   {isMatching ? matchingProgress : "Match Students"}
