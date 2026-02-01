@@ -75,7 +75,7 @@ function App() {
           }
         />
         <Route
-          path="dashboard/company"
+          path="dashboard/company/*"
           element={
             <ProtectedRoute allowedRoles={["COMPANY", "ADMIN", "SUPERADMIN"]}>
               <CompanyDashboard />

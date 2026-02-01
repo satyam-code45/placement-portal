@@ -22,6 +22,8 @@ import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import { AppLayout } from "../component/layout";
 import { useResume, useResumeCompleteness } from "../hooks/useStudent";
+import { useResumeATSRuns } from "../hooks/use-resume-ats";
+
 
 export default function ResumePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -34,6 +36,10 @@ export default function ResumePage() {
     isDeleting,
   } = useResume();
   const { data: completeness } = useResumeCompleteness();
+
+     const { atsRuns, isLoading:resumeAtsLoading } = useResumeATSRuns();
+
+if (resumeAtsLoading) return <Skeleton />;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -176,6 +182,16 @@ export default function ResumePage() {
             )}
           </CardContent>
         </Card>
+
+     
+
+{atsRuns?.map((run) => (
+  <div key={run.id}>
+    <p>Score: {run.overallScore}%</p>
+    <p>{run.summary}</p>
+  </div>
+))}
+
       </div>
     </AppLayout>
   );

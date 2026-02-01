@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Search,
@@ -17,6 +17,9 @@ import {
   IndianRupee,
   Calendar,
   Download,
+  RefreshCw,
+  Users,
+  Sparkles,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -52,6 +55,12 @@ import { AdminLayout } from "../components/layout";
 import { mockOpportunities } from "../api/mockData";
 import type { Opportunity } from "../types";
 import { toast } from "sonner";
+import { jobScraperService } from "@/services/jobScraperService";
+import {
+  jobIntelligenceService,
+  type JobIntelligence,
+} from "@/services/jobIntelligenceService";
+import { studentMatchingService } from "@/services/studentMatchingService";
 
 function OpportunityCard({
   opportunity,
@@ -208,15 +217,46 @@ export default function OpportunitiesPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [opportunities, setOpportunities] = useState(mockOpportunities);
+  const [scrapedJobs, setScrapedJobs] = useState<JobIntelligence[]>([]);
+  const [isLoadingJobs, setIsLoadingJobs] = useState(false);
   const [scrapeDialogOpen, setScrapeDialogOpen] = useState(false);
+  const [matchDialogOpen, setMatchDialogOpen] = useState(false);
+  const [isMatching, setIsMatching] = useState(false);
+  const [matchingProgress, setMatchingProgress] = useState<string>("");
   const [selectedPeriod, setSelectedPeriod] = useState("7d");
+  const [isScraping, setIsScraping] = useState(false);
+  const [searchTerms, setSearchTerms] = useState(
+    "React Native Developer, Frontend Engineer",
+  );
+  const [locations, setLocations] = useState("India, Remote");
   const [selectedSources, setSelectedSources] = useState({
     linkedin: true,
-    internshala: true,
-    naukri: true,
+    internshala: false,
+    naukri: false,
     indeed: false,
     glassdoor: false,
   });
+
+  // Fetch job intelligence data on mount
+  useEffect(() => {
+    fetchLatestJobs();
+  }, []);
+
+  const fetchLatestJobs = async () => {
+    setIsLoadingJobs(true);
+    try {
+      const response = await jobIntelligenceService.getLatestJobs();
+      setScrapedJobs(response.jobs);
+      console.log(
+        `Loaded ${response.jobs.length} scraped jobs from run ${response.runId}`,
+      );
+    } catch (error) {
+      console.error("Error fetching job intelligence:", error);
+      // Don't show error toast on initial load if no data exists
+    } finally {
+      setIsLoadingJobs(false);
+    }
+  };
 
   const filteredOpportunities = opportunities.filter((opp) => {
     const matchesSearch =
@@ -269,7 +309,43 @@ export default function OpportunitiesPage() {
     return activeSources * periodMultiplier;
   };
 
-  const handleScrape = () => {
+  const handleMatchStudents = async () => {
+    setIsMatching(true);
+    setMatchDialogOpen(false);
+
+    try {
+      setMatchingProgress("Starting student-job matching...");
+
+      // For demo, we'll match a sample student (ID: 2)
+      // In production, you'd fetch all active students and match them
+      const studentId = 2;
+
+      setMatchingProgress(
+        `Matching student ${studentId} with available jobs...`,
+      );
+
+      const result = await studentMatchingService.matchStudent(studentId);
+
+      if (result.success) {
+        toast.success(
+          `Successfully matched! Found ${result.jobs_count || 0} suitable jobs for the student.`,
+          { duration: 6000 },
+        );
+      } else {
+        toast.error("Matching completed but no suitable jobs found.");
+      }
+
+      setMatchingProgress("");
+    } catch (error) {
+      console.error("Matching error:", error);
+      toast.error("Failed to match students with jobs. Please try again.");
+      setMatchingProgress("");
+    } finally {
+      setIsMatching(false);
+    }
+  };
+
+  const handleScrape = async () => {
     const activeSources = Object.entries(selectedSources)
       .filter(([, enabled]) => enabled)
       .map(([source]) => source);
@@ -279,41 +355,63 @@ export default function OpportunitiesPage() {
       return;
     }
 
-    // Close dialog and show success message immediately
+    // Parse search terms and locations from input
+    const searchTermsArray = searchTerms
+      .split(",")
+      .map((term) => term.trim())
+      .filter(Boolean);
+
+    const locationsArray = locations
+      .split(",")
+      .map((loc) => loc.trim())
+      .filter(Boolean);
+
+    if (searchTermsArray.length === 0) {
+      toast.error("Please enter at least one search term");
+      return;
+    }
+
+    if (locationsArray.length === 0) {
+      toast.error("Please enter at least one location");
+      return;
+    }
+
+    // Convert period to hours
+    const hoursMap: Record<string, number> = {
+      "1d": 24,
+      "3d": 72,
+      "7d": 168,
+      "14d": 336,
+      "30d": 720,
+    };
+
+    setIsScraping(true);
     setScrapeDialogOpen(false);
-    toast.success(
-      "Scraping initiated! Relevant companies will be shown and mailed to you shortly.",
-      { duration: 6000 },
-    );
 
-    // Make API call in background without blocking UI
-    const scraperUrl =
-      import.meta.env.VITE_SCRAPER_URL || "http://localhost:8000";
+    try {
+      const response = await jobScraperService.scrapeJobs({
+        search_terms: searchTermsArray,
+        locations: locationsArray,
+        site_names: activeSources,
+        results_wanted: 100,
+        hours_old: hoursMap[selectedPeriod] || 72,
+      });
 
-    fetch(`${scraperUrl}/scrape-json`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        search_terms: activeSources.map((source) => {
-          // Map source names to relevant search terms
-          const termMap: Record<string, string> = {
-            linkedin: "Software Engineer",
-            internshala: "Internship",
-            naukri: "Developer",
-            indeed: "Tech Jobs",
-            glassdoor: "Engineering",
-          };
-          return termMap[source] || "Jobs";
-        }),
-        locations: ["India", "Remote"],
-        period: selectedPeriod,
-      }),
-    }).catch((error) => {
+      toast.success(
+        `Successfully scraped ${response.jobs?.length || 0} jobs! They will be processed and added to your opportunities.`,
+        { duration: 6000 },
+      );
+
+      // Refresh job intelligence data after scraping
+      setTimeout(() => {
+        fetchLatestJobs();
+      }, 2000);
+    } catch (error) {
       console.error("Scraping error:", error);
-      // Silently fail - user already got success message
-    });
+      toast.error("Failed to scrape jobs. Please try again later.");
+    } finally {
+      setIsScraping(false);
+    }
   };
 
   return (
@@ -328,6 +426,85 @@ export default function OpportunitiesPage() {
             </p>
           </div>
           <div className="flex gap-3">
+            <Button
+              variant="outline"
+              onClick={fetchLatestJobs}
+              disabled={isLoadingJobs}
+              className="border-black hover:bg-gray-100"
+            >
+              <RefreshCw
+                className={`mr-2 h-4 w-4 ${isLoadingJobs ? "animate-spin" : ""}`}
+              />
+              Refresh Jobs
+            </Button>
+            <Dialog open={matchDialogOpen} onOpenChange={setMatchDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="border-black hover:bg-green-600 hover:text-white"
+                  disabled={isMatching || scrapedJobs.length === 0}
+                >
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  {isMatching ? matchingProgress : "Match Students"}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px] border-2 border-black">
+                <DialogHeader>
+                  <DialogTitle>Match Students with Jobs</DialogTitle>
+                  <DialogDescription>
+                    Use AI to match students with suitable job opportunities
+                    based on their skills and preferences.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="rounded-lg bg-blue-50 border-2 border-blue-200 p-4">
+                    <div className="flex items-start gap-3">
+                      <Users className="h-5 w-5 text-blue-600 mt-0.5" />
+                      <div>
+                        <h4 className="font-semibold text-sm text-blue-900 mb-1">
+                          Smart Matching Algorithm
+                        </h4>
+                        <p className="text-xs text-blue-700">
+                          Our AI analyzes student profiles, skills, experience,
+                          and preferences to find the best job matches from{" "}
+                          {scrapedJobs.length} available opportunities.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Available Jobs:</span>
+                      <span className="font-semibold text-blue-600">
+                        {scrapedJobs.length}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Matching Mode:</span>
+                      <span className="font-semibold">AI-Powered</span>
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    variant="outline"
+                    onClick={() => setMatchDialogOpen(false)}
+                    className="border-black"
+                    disabled={isMatching}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleMatchStudents}
+                    disabled={isMatching}
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Start Matching
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
             <Dialog open={scrapeDialogOpen} onOpenChange={setScrapeDialogOpen}>
               <DialogTrigger asChild>
                 <Button
@@ -342,11 +519,41 @@ export default function OpportunitiesPage() {
                 <DialogHeader>
                   <DialogTitle>Scrape Jobs from Platforms</DialogTitle>
                   <DialogDescription>
-                    Select time period and sources to automatically fetch job
+                    Configure search parameters to automatically fetch job
                     listings
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-6 py-4">
+                  {/* Search Terms Input */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-semibold">
+                      Search Terms
+                    </Label>
+                    <Input
+                      placeholder="e.g., React Native Developer, Frontend Engineer"
+                      value={searchTerms}
+                      onChange={(e) => setSearchTerms(e.target.value)}
+                      className="border-2 border-gray-300"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Separate multiple terms with commas
+                    </p>
+                  </div>
+
+                  {/* Locations Input */}
+                  <div className="space-y-3">
+                    <Label className="text-sm font-semibold">Locations</Label>
+                    <Input
+                      placeholder="e.g., India, Remote, Bangalore"
+                      value={locations}
+                      onChange={(e) => setLocations(e.target.value)}
+                      className="border-2 border-gray-300"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Separate multiple locations with commas
+                    </p>
+                  </div>
+
                   {/* Time Period Selection */}
                   <div className="space-y-3">
                     <Label className="text-sm font-semibold">Time Period</Label>
@@ -434,9 +641,9 @@ export default function OpportunitiesPage() {
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-sm mt-2">
-                      <span className="text-gray-600">Estimated Jobs:</span>
+                      <span className="text-gray-600">Results Wanted:</span>
                       <span className="font-semibold text-yellow-600">
-                        ~{getEstimatedJobs()}
+                        100 jobs
                       </span>
                     </div>
                   </div>
@@ -446,16 +653,20 @@ export default function OpportunitiesPage() {
                     variant="outline"
                     onClick={() => setScrapeDialogOpen(false)}
                     className="border-black"
+                    disabled={isScraping}
                   >
                     Cancel
                   </Button>
                   <Button
                     onClick={handleScrape}
-                    disabled={Object.values(selectedSources).every((v) => !v)}
-                    className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                    disabled={
+                      Object.values(selectedSources).every((v) => !v) ||
+                      isScraping
+                    }
+                    className="bg-yellow-600 hover:bg-yellow-700 text-white disabled:opacity-50"
                   >
                     <Download className="mr-2 h-4 w-4" />
-                    Start Scraping
+                    {isScraping ? "Scraping..." : "Start Scraping"}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -491,15 +702,11 @@ export default function OpportunitiesPage() {
               </p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-blue-200 bg-blue-50/50">
             <CardContent className="p-4">
-              <p className="text-sm text-gray-600">Active Internships</p>
-              <p className="text-2xl font-bold">
-                {
-                  opportunities.filter(
-                    (o) => o.type === "internship" && o.status === "approved",
-                  ).length
-                }
+              <p className="text-sm text-blue-700">Scraped Jobs</p>
+              <p className="text-2xl font-bold text-blue-700">
+                {scrapedJobs.length}
               </p>
             </CardContent>
           </Card>
@@ -571,16 +778,94 @@ export default function OpportunitiesPage() {
           </TabsContent>
 
           <TabsContent value="scraped" className="space-y-4">
-            {filteredOpportunities
-              .filter((o) => o.source !== "manual")
-              .map((opp) => (
-                <OpportunityCard
-                  key={opp.id}
-                  opportunity={opp}
-                  onApprove={handleApprove}
-                  onReject={handleReject}
-                />
-              ))}
+            {isLoadingJobs ? (
+              <Card>
+                <CardContent className="p-12 text-center text-gray-600">
+                  <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-2" />
+                  Loading scraped jobs...
+                </CardContent>
+              </Card>
+            ) : scrapedJobs.length === 0 ? (
+              <Card>
+                <CardContent className="p-12 text-center text-gray-600">
+                  <p className="mb-2">No scraped jobs available yet.</p>
+                  <p className="text-sm text-gray-500">
+                    Click "Scrape Jobs" to fetch job listings from external
+                    platforms.
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              scrapedJobs.map((job) => (
+                <Card
+                  key={job.id}
+                  className="hover:shadow-md transition-shadow"
+                >
+                  <CardContent className="p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-semibold text-lg truncate">
+                            {job.title}
+                          </h3>
+                          <Badge className="bg-blue-100 text-blue-700">
+                            Score: {job.finalScore.toFixed(1)}
+                          </Badge>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-3">
+                          <span className="flex items-center gap-1">
+                            <Building2 className="h-4 w-4" />
+                            {job.companyName}
+                          </span>
+                          {job.location && (
+                            <span className="flex items-center gap-1">
+                              <MapPin className="h-4 w-4" />
+                              {job.location}
+                            </span>
+                          )}
+                          {job.jobType && (
+                            <Badge variant="outline">{job.jobType}</Badge>
+                          )}
+                          <Badge className="bg-gray-200 text-gray-700">
+                            {job.source}
+                          </Badge>
+                        </div>
+
+                        {job.description && (
+                          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                            {job.description}
+                          </p>
+                        )}
+
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <Calendar className="h-3 w-3" />
+                          Scraped:{" "}
+                          {new Date(job.createdAt).toLocaleDateString("en-IN", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2">
+                        <Button size="sm" variant="outline" asChild>
+                          <a
+                            href={job.applyLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <ExternalLink className="h-4 w-4 mr-1" />
+                            Apply
+                          </a>
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </TabsContent>
 
           <TabsContent value="manual" className="space-y-4">

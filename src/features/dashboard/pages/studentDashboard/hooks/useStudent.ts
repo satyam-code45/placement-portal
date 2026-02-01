@@ -76,3 +76,5 @@ export function useResumeCompleteness() {
     queryFn: studentApi.checkResumeCompleteness,
   });
 }
+
+ 

@@ -10,10 +10,10 @@ import { Button } from "@/components/ui/button";
 import { AppLayout } from "../component/layout";
 
 export default function MockInterviewPage() {
-  const handleStartInterview = () => {
-    window.open("http://localhost:3445/learnify", "_blank");
-    // TODO: change to actual service url
-  };
+const handleStartInterview = () => {
+  window.open("http://localhost:3000/dashboard", "_self");
+};
+
 
   return (
     <AppLayout>
