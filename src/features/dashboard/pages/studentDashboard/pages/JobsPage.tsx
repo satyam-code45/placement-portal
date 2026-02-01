@@ -42,10 +42,13 @@ import { AppLayout } from "../component/layout";
 import { STUDENT_JOBS_ROUTE } from "../types/common";
 import {
   jobIntelligenceService,
-  type JobIntelligence,
+  type StudentJobIntelligence,
 } from "@/services/jobIntelligenceService";
 
-function ScrapedJobCard({ job }: { job: JobIntelligence }) {
+function ScrapedJobCard({ job }: { job: StudentJobIntelligence }) {
+  const isApproved = !!job.approved;
+  const hasApplyLink = typeof job.applyLink === "string" && job.applyLink.length > 0;
+
   return (
     <Card className="hover:shadow-lg transition-all border-blue-200 bg-gradient-to-br from-blue-50/50 to-white overflow-hidden">
       <CardContent className="p-6">
@@ -77,6 +80,11 @@ function ScrapedJobCard({ job }: { job: JobIntelligence }) {
               <Badge className="bg-gray-100 text-gray-700 text-xs shrink-0">
                 {job.source}
               </Badge>
+              {!isApproved && (
+                <Badge variant="outline" className="text-xs shrink-0">
+                  Awaiting TPO approval
+                </Badge>
+              )}
             </div>
             {job.description && (
               <p className="text-sm text-muted-foreground line-clamp-2 mb-3 break-words">
@@ -95,12 +103,18 @@ function ScrapedJobCard({ job }: { job: JobIntelligence }) {
               </span>
             </div>
           </div>
-          <Button size="sm" className="shrink-0 w-full sm:w-auto" asChild>
-            <a href={job.applyLink} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="h-4 w-4 mr-2" />
-              Apply
-            </a>
-          </Button>
+          {isApproved && hasApplyLink ? (
+            <Button size="sm" className="shrink-0 w-full sm:w-auto" asChild>
+              <a
+                href={job.applyLink ?? undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Apply
+              </a>
+            </Button>
+          ) : null}
         </div>
       </CardContent>
     </Card>
@@ -201,7 +215,7 @@ export default function JobsPage() {
     minSalary: 0,
     eligibilityStatus: "",
   });
-  const [scrapedJobs, setScrapedJobs] = useState<JobIntelligence[]>([]);
+  const [scrapedJobs, setScrapedJobs] = useState<StudentJobIntelligence[]>([]);
   const [isLoadingScraped, setIsLoadingScraped] = useState(false);
   const [scrapedError, setScrapedError] = useState<string>("");
   const { data: jobs, isLoading } = useJobs(filters);
@@ -218,7 +232,7 @@ export default function JobsPage() {
     setScrapedError("");
     try {
       console.log("Fetching scraped jobs...");
-      const response = await jobIntelligenceService.getLatestJobs();
+      const response = await jobIntelligenceService.getLatestJobsForStudent();
       console.log("Scraped jobs response:", response);
       setScrapedJobs(response.jobs || []);
       console.log(`Loaded ${response.jobs?.length || 0} scraped jobs`);
@@ -315,7 +329,8 @@ export default function JobsPage() {
             onValueChange={(v) =>
               setFilters({
                 ...filters,
-                eligibilityStatus: v === "all" ? "" : (v as any),
+                eligibilityStatus:
+                  v === "all" ? "" : (v as JobFilters["eligibilityStatus"]),
               })
             }
           >

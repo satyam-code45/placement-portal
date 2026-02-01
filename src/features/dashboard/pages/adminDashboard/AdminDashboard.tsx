@@ -15,6 +15,7 @@ import {
   ReportsPage,
   UsersPage,
   SettingsPage,
+  EligibleStudentsPage,
 } from "./pages";
 import { ADMIN_ROUTES } from "./types";
 
@@ -29,6 +30,10 @@ export default function AdminDashboard() {
       <Route
         path={ADMIN_ROUTES.OPPORTUNITIES}
         element={<OpportunitiesPage />}
+      />
+      <Route
+        path={ADMIN_ROUTES.ELIGIBLE_STUDENTS}
+        element={<EligibleStudentsPage />}
       />
       <Route
         path={ADMIN_ROUTES.ADD_OPPORTUNITY}

@@ -17,6 +17,7 @@ export const ADMIN_ROUTES = {
   REPORTS: "reports",
   USERS: "users",
   SETTINGS: "settings",
+  ELIGIBLE_STUDENTS: "opportunities/:jobSource/:jobId/eligible-students",
 } as const;
 
 // Full route paths (for navigation from other parts of app)
@@ -26,8 +27,10 @@ export const ADMIN_ADD_OPPORTUNITY_ROUTE = "/dashboard/admin/opportunities/add";
 export const ADMIN_COMPANIES_ROUTE = "/dashboard/admin/companies";
 export const ADMIN_OUTREACH_ROUTE = "/dashboard/admin/outreach";
 export const ADMIN_HEADLINES_ROUTE = "/dashboard/admin/headlines";
-export const ADMIN_STUDENTS_ANALYTICS_ROUTE = "/dashboard/admin/students-analytics";
-export const ADMIN_COMPANY_ANALYTICS_ROUTE = "/dashboard/admin/company-analytics";
+export const ADMIN_STUDENTS_ANALYTICS_ROUTE =
+  "/dashboard/admin/students-analytics";
+export const ADMIN_COMPANY_ANALYTICS_ROUTE =
+  "/dashboard/admin/company-analytics";
 export const ADMIN_MOCK_INTERVIEWS_ROUTE = "/dashboard/admin/mock-interviews";
 export const ADMIN_REVIEW_JOBS_ROUTE = "/dashboard/admin/review-jobs";
 export const ADMIN_ALUMNI_ROUTE = "/dashboard/admin/alumni";

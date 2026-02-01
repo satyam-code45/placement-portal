@@ -9,10 +9,16 @@ export interface JobIntelligence {
   source: string;
   applyLink: string;
   finalScore: number;
-  scoreBreakdown: any;
+  scoreBreakdown: unknown;
   description: string | null;
   runId: number;
   createdAt: string;
+}
+
+export interface StudentJobIntelligence extends Omit<JobIntelligence, "applyLink"> {
+  applyLink: string | null;
+  approved: boolean;
+  approvedAt: string | null;
 }
 
 export interface JobIntelligenceRun {
@@ -25,6 +31,13 @@ export interface JobIntelligenceRun {
 
 export interface GetLatestJobsResponse {
   jobs: JobIntelligence[];
+  runId: number;
+  runCreatedAt: string;
+  totalJobs: number;
+}
+
+export interface GetLatestJobsForStudentResponse {
+  jobs: StudentJobIntelligence[];
   runId: number;
   runCreatedAt: string;
   totalJobs: number;
@@ -53,6 +66,16 @@ class JobIntelligenceService {
           Authorization: `Bearer ${BACKEND_INTERNAL_TOKEN}`,
         },
       },
+    );
+    return response.data;
+  }
+
+  /**
+   * Student-facing: latest jobs + approval per job (no internal token)
+   */
+  async getLatestJobsForStudent(): Promise<GetLatestJobsForStudentResponse> {
+    const response = await api.get<GetLatestJobsForStudentResponse>(
+      "/job-intelligence/latest",
     );
     return response.data;
   }

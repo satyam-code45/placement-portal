@@ -20,6 +20,7 @@ import {
   RefreshCw,
   Users,
   Sparkles,
+  EyeIcon,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -216,6 +217,7 @@ export default function OpportunitiesPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [maxJobFinalScore, setMaxJobFinalScore] = useState<string>("");
   const [opportunities, setOpportunities] = useState(mockOpportunities);
   const [scrapedJobs, setScrapedJobs] = useState<JobIntelligence[]>([]);
   const [isLoadingJobs, setIsLoadingJobs] = useState(false);
@@ -265,6 +267,14 @@ export default function OpportunitiesPage() {
     const matchesStatus = statusFilter === "all" || opp.status === statusFilter;
     const matchesType = typeFilter === "all" || opp.type === typeFilter;
     return matchesSearch && matchesStatus && matchesType;
+  });
+
+  const filteredScrapedJobs = scrapedJobs.filter((job) => {
+    const raw = maxJobFinalScore.trim();
+    if (!raw) return true;
+    const max = Number(raw);
+    if (!Number.isFinite(max)) return true;
+    return (job.finalScore ?? 0) <= max;
   });
 
   const handleApprove = (id: string) => {
@@ -713,6 +723,13 @@ export default function OpportunitiesPage() {
             />
           </div>
           <div className="flex gap-3">
+            <Input
+              type="number"
+              placeholder="Max job score"
+              className="w-40"
+              value={maxJobFinalScore}
+              onChange={(e) => setMaxJobFinalScore(e.target.value)}
+            />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-36">
                 <Filter className="h-4 w-4 mr-2" />
@@ -774,7 +791,7 @@ export default function OpportunitiesPage() {
                   Loading scraped jobs...
                 </CardContent>
               </Card>
-            ) : scrapedJobs.length === 0 ? (
+            ) : filteredScrapedJobs.length === 0 ? (
               <Card>
                 <CardContent className="p-12 text-center text-gray-600">
                   <p className="mb-2">No scraped jobs available yet.</p>
@@ -785,7 +802,7 @@ export default function OpportunitiesPage() {
                 </CardContent>
               </Card>
             ) : (
-              scrapedJobs.map((job) => (
+              filteredScrapedJobs.map((job) => (
                 <Card
                   key={job.id}
                   className="hover:shadow-md transition-shadow"
@@ -838,7 +855,7 @@ export default function OpportunitiesPage() {
                         </div>
                       </div>
 
-                      <div className="flex flex-col gap-2">
+                      <div className="flex flex-row items-center gap-2">
                         <Button size="sm" variant="outline" asChild>
                           <a
                             href={job.applyLink}
@@ -846,8 +863,16 @@ export default function OpportunitiesPage() {
                             rel="noopener noreferrer"
                           >
                             <ExternalLink className="h-4 w-4 mr-1" />
-                            Apply
+                            Job Link
                           </a>
+                        </Button>
+                        <Button size="sm" variant="outline" asChild>
+                          <Link
+                            to={`/dashboard/admin/opportunities/job_intelligence/${job.id}/eligible-students`}
+                          >
+                            <EyeIcon className="h-4 w-4 mr-1" />
+                            View Eligible Student
+                          </Link>
                         </Button>
                       </div>
                     </div>
