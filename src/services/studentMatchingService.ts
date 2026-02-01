@@ -44,6 +44,30 @@ export interface BatchStudentMatchRequest {
   student_ids?: number[];
 }
 
+export interface BatchStudentMatchResponse {
+  success: boolean;
+  error?: string | null;
+  summary?: {
+    studentsConsidered: number;
+    studentsMatched: number;
+    totalMatches: number;
+  };
+  email?: {
+    tpoSent?: boolean;
+    error?: string | null;
+  };
+  results?: Array<{
+    studentId: number;
+    success: boolean;
+    error?: string | null;
+    matches?: StudentJobMatchResponse["matches"];
+    persisted?: {
+      matchRunId?: number;
+      savedMatches?: number;
+    };
+  }>;
+}
+
 class StudentMatchingService {
   /**
    * Match a single student with jobs based on their skillset
@@ -76,6 +100,38 @@ class StudentMatchingService {
         studentIds.map((id) => this.matchStudent(id)),
       );
       return results;
+    } catch (error) {
+      console.error("Batch matching error:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Match ALL students in the DB (via orchestrator batch endpoint)
+   */
+  async matchAllStudents(params?: {
+    topK?: number;
+    jobsLimit?: number;
+    limitStudents?: number;
+    isActive?: boolean;
+  }): Promise<BatchStudentMatchResponse> {
+    try {
+      const response = await axios.post<BatchStudentMatchResponse>(
+        `${ORCHESTRATOR_BASE_URL}/run/student-matching/batch`,
+        {
+          topK: params?.topK,
+          jobsLimit: params?.jobsLimit,
+          limitStudents: params?.limitStudents,
+          isActive: params?.isActive,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          timeout: 120000,
+        },
+      );
+      return response.data;
     } catch (error) {
       console.error("Batch matching error:", error);
       throw error;

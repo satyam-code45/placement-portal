@@ -303,25 +303,25 @@ export default function OpportunitiesPage() {
     try {
       setMatchingProgress("Starting student-job matching...");
 
-      // For demo, we'll match a sample student (ID: 2)
-      // In production, you'd fetch all active students and match them
-      const studentId = 2;
-
       setMatchingProgress(
-        `Matching student ${studentId} with available jobs...`,
+        "Matching all active students with available jobs...",
       );
 
-      const result = await studentMatchingService.matchStudent(studentId);
+      const result = await studentMatchingService.matchAllStudents({
+        isActive: true,
+      });
 
       if (result.success) {
         toast.success(
-          `Successfully matched! Found ${result.matches?.length ?? 0} suitable jobs for the student.`,
-          { duration: 6000 },
+          `Matching complete: ${result.summary?.studentsMatched ?? 0}/${result.summary?.studentsConsidered ?? 0} students matched, ${result.summary?.totalMatches ?? 0} total matches.`,
+          { duration: 7000 },
         );
+
+        if (result.email?.tpoSent === false && result.email?.error) {
+          toast.message(`TPO email not sent: ${result.email.error}`);
+        }
       } else {
-        toast.error(
-          result.error || "Matching completed but no suitable jobs found.",
-        );
+        toast.error(result.error || "Batch matching failed.");
       }
 
       setMatchingProgress("");
