@@ -47,7 +47,7 @@ function StatCard({
       <div className="absolute inset-0 bg-black rounded-3xl translate-x-2 translate-y-2" />
 
       {/* Main Card */}
-      <div className="relative bg-[#ffba4b] rounded-3xl border-3 border-black p-6 transition-transform duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1 h-full flex flex-col">
+      <div className="relative bg-white rounded-3xl border-3 border-black p-6 transition-transform duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1 h-full flex flex-col">
         {/* Icon Badge - Top Right */}
         <div className="absolute -top-3 -right-3 bg-black rounded-full p-4 shadow-lg">
           <Icon className="h-6 w-6 text-white" />
