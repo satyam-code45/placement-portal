@@ -2,7 +2,7 @@ import { Globe, GraduationCap, User, Video } from "lucide-react";
 
 export function HowItWorks() {
   return (
-    <section className="py-24 bg-zinc-50 border-y border-zinc-100/50">
+    <section className="py-24 bg-gradient-to-b from-[#c49a1b]/5 to-white border-y border-[#c49a1b]/10">
       <div className="text-center mb-20 space-y-4">
         <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900">
           With us, placement tracking is easy.
@@ -14,8 +14,8 @@ export function HowItWorks() {
 
       <div className="container mx-auto px-6 md:px-12 grid md:grid-cols-3 gap-8">
         {/* Card 01: Connect Profile */}
-        <div className="bg-white p-8 rounded-[2rem] border border-zinc-200/80 shadow-sm flex flex-col h-[500px] relative overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div className="h-8 w-8 bg-zinc-100 rounded-md flex items-center justify-center text-xs font-bold text-zinc-500 mb-6 font-mono">
+        <div className="bg-white p-8 rounded-[2rem] border border-[#c49a1b]/20 shadow-sm flex flex-col h-[500px] relative overflow-hidden group hover:shadow-xl hover:shadow-[#c49a1b]/10 hover:-translate-y-1 transition-all duration-300">
+          <div className="h-8 w-8 bg-yellow-600/15 rounded-md flex items-center justify-center text-xs font-bold text-[#8b6914] mb-6 font-mono">
             01
           </div>
           <h3 className="text-2xl font-bold tracking-tight mb-3">
@@ -44,8 +44,8 @@ export function HowItWorks() {
         </div>
 
         {/* Card 02: Preferences */}
-        <div className="bg-white p-8 rounded-[2rem] border border-zinc-200/80 shadow-sm flex flex-col h-[500px] relative overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div className="h-8 w-8 bg-zinc-100 rounded-md flex items-center justify-center text-xs font-bold text-zinc-500 mb-6 font-mono">
+        <div className="bg-white p-8 rounded-[2rem] border border-[#c49a1b]/20 shadow-sm flex flex-col h-[500px] relative overflow-hidden group hover:shadow-xl hover:shadow-[#c49a1b]/10 hover:-translate-y-1 transition-all duration-300">
+          <div className="h-8 w-8 bg-yellow-600/15 rounded-md flex items-center justify-center text-xs font-bold text-[#8b6914] mb-6 font-mono">
             02
           </div>
           <h3 className="text-2xl font-bold tracking-tight mb-3">
@@ -56,10 +56,10 @@ export function HowItWorks() {
             easy.
           </p>
 
-          <div className="absolute bottom-6 left-6 right-6 bg-zinc-50 rounded-xl border border-zinc-100 p-4 space-y-3">
+          <div className="absolute bottom-6 left-6 right-6 bg-yellow-600/5 rounded-xl border border-[#c49a1b]/20 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-4 rounded-full bg-zinc-800 relative">
+                <div className="w-8 h-4 rounded-full bg-yellow-600 relative">
                   <div className="absolute right-0.5 top-0.5 h-3 w-3 bg-white rounded-full"></div>
                 </div>
                 <span className="text-sm font-medium">Mon</span>
@@ -81,7 +81,7 @@ export function HowItWorks() {
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-4 rounded-full bg-zinc-800 relative">
+                <div className="w-8 h-4 rounded-full bg-yellow-600 relative">
                   <div className="absolute right-0.5 top-0.5 h-3 w-3 bg-white rounded-full"></div>
                 </div>
                 <span className="text-sm font-medium">Wed</span>
@@ -94,8 +94,8 @@ export function HowItWorks() {
         </div>
 
         {/* Card 03: Interview */}
-        <div className="bg-white p-8 rounded-[2rem] border border-zinc-200/80 shadow-sm flex flex-col h-[500px] relative overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-          <div className="h-8 w-8 bg-zinc-100 rounded-md flex items-center justify-center text-xs font-bold text-zinc-500 mb-6 font-mono">
+        <div className="bg-white p-8 rounded-[2rem] border border-[#c49a1b]/20 shadow-sm flex flex-col h-[500px] relative overflow-hidden group hover:shadow-xl hover:shadow-[#c49a1b]/10 hover:-translate-y-1 transition-all duration-300">
+          <div className="h-8 w-8 bg-yellow-600/15 rounded-md flex items-center justify-center text-xs font-bold text-[#8b6914] mb-6 font-mono">
             03
           </div>
           <h3 className="text-2xl font-bold tracking-tight mb-3">
@@ -115,11 +115,11 @@ export function HowItWorks() {
               </div>
             </div>
             <div className="bg-white p-3 flex justify-center gap-4 border-t border-zinc-100">
-              <div className="h-8 w-8 rounded-full bg-zinc-100 flex items-center justify-center">
-                <Video className="h-4 w-4 text-zinc-600" />
+              <div className="h-8 w-8 rounded-full bg-yellow-600/15 flex items-center justify-center">
+                <Video className="h-4 w-4 text-[#c49a1b]" />
               </div>
-              <div className="h-8 w-8 rounded-full bg-zinc-800 flex items-center justify-center">
-                <div className="h-3 w-3 bg-yellow-500 rounded-sm"></div>
+              <div className="h-8 w-8 rounded-full bg-yellow-600 flex items-center justify-center">
+                <div className="h-3 w-3 bg-white rounded-sm"></div>
               </div>
               <div className="h-8 w-8 rounded-full bg-zinc-100 flex items-center justify-center">
                 <div className="h-4 w-4 border-2 border-zinc-400 rounded-sm"></div>
